@@ -1005,7 +1005,7 @@
             <tr>
               <td><strong>${p.icon} ${p.name}</strong></td>
               <td>${p.stock}</td>
-              <td>$${p.price.toFixed(2)}</td>
+              <td>₹${p.price.toFixed(2)}</td>
               <td>${estimateDaysUntilStockout(p)} d</td>
               <td><button class="btn-pill-small green btn-modal-buy" data-id="${p.id}">Buy 1</button></td>
             </tr>
@@ -1131,7 +1131,7 @@
   // Record Sale Modal
   document.getElementById('btnOpenSaleModal').onclick = () => {
     const sel = document.getElementById('inputSaleProduct');
-    sel.innerHTML = state.products.map(p => `<option value="${p.id}">${p.icon} [${p.id}] ${p.name} — $${p.price.toFixed(2)} (In Stock: ${p.stock})</option>`).join('');
+    sel.innerHTML = state.products.map(p => `<option value="${p.id}">${p.icon} [${p.id}] ${p.name} — ₹${p.price.toFixed(2)} (In Stock: ${p.stock})</option>`).join('');
     document.getElementById('modalSale').classList.add('open');
   };
 

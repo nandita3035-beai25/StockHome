@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StockHome — 2D Illustrated Inventory & Demand Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-soothing">
+
+  <!-- TOP SOOTHING HEADER -->
+  <header class="app-header">
+    <div class="brand-block">
+      <div class="brand-symbol">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <div class="brand-meta">
+        <h1 class="brand-title">Stock<span>Home</span></h1>
+        <p class="brand-subtitle">Smart Inventory & Demand Planning Promenade</p>
+      </div>
+    </div>
+
+    <div class="header-status-center">
+      <div class="pill-badge pill-time" id="headerClock">12:00 PM</div>
+      <div class="pill-badge pill-surge" id="headerSurge">Demand Rate: 1.00x Base</div>
+      <div class="pill-badge pill-health safe" id="headerHealthBadge">
+        <span class="health-dot"></span>
+        <span id="headerHealthText">Boutiques Optimal</span>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <button class="control-btn" id="soundToggleBtn" title="Toggle Calm Sound Chimes">
+        <span class="btn-icon">🔔</span> Chimes On
+      </button>
+      <button class="control-btn" id="themeModeBtn" title="Toggle Soft Twilight Mode">
+        <span class="btn-icon">🌙</span> Twilight
+      </button>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="app-nav">
+    <div class="nav-inner">
+      <button class="nav-item active" data-tab="tab-painted-mall">
+        <span class="nav-icon">🌿</span> Promenade Painting
+      </button>
+      <button class="nav-item" data-tab="tab-overview">
+        <span class="nav-icon">📊</span> Overview & Charts
+      </button>
+      <button class="nav-item" data-tab="tab-catalog">
+        <span class="nav-icon">🛍️</span> Boutique Shelves
+      </button>
+      <button class="nav-item" data-tab="tab-reorder">
+        <span class="nav-icon">⏳</span> Smart Reorder Queue
+        <span class="tab-chip" id="chipReorderCount">0</span>
+      </button>
+      <button class="nav-item" data-tab="tab-analytics">
+        <span class="nav-icon">📈</span> Demand Analytics & Matrix
+      </button>
+      <button class="nav-item" data-tab="tab-simulation">
+        <span class="nav-icon">🕊️</span> Gentle Simulation
+        <span class="active-dot" id="simLiveDot"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN VIEWPORT -->
+  <main class="app-viewport">
+
+    <!-- SCREEN 1: 2D PAINTED MALL PROMENADE -->
+    <section id="tab-painted-mall" class="tab-screen active">
+      <div class="view-header">
+        <div class="title-wrap">
+          <span class="category-badge">Hand-Crafted 2D Architectural View</span>
+          <h2>The Garden Promenade Boutiques</h2>
+          <p>An illustrated bird's-eye view of your 4 retail shops. Inspect boutique shelves, monitor live health glows, or dispatch replenishment couriers.</p>
+        </div>
+        <div class="header-actions-bar">
+          <button class="btn-action btn-outline" id="btnStrollVisitor">🕊️ Stroll Visitor</button>
+          <button class="btn-action btn-outline" id="btnRestockCourier">🚚 Dispatch Delivery Van</button>
+        </div>
+      </div>
+
+      <!-- CRISP VECTOR ILLUSTRATED 2D MALL PAINTING -->
+      <div class="painting-frame">
+        <div class="promenade-canvas-container" id="promenadeContainer">
+          <!-- Interactive SVG Painting -->
+          <svg id="promenadeSvg" viewBox="0 0 1100 580" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <!-- Soft watercolor style gradients -->
+              <linearGradient id="grassGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#EBF0E4"/>
+                <stop offset="100%" stop-color="#DEE7D4"/>
+              </linearGradient>
+              <linearGradient id="promenadePave" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#F2EDE4"/>
+                <stop offset="50%" stop-color="#EDE6DA"/>
+                <stop offset="100%" stop-color="#F2EDE4"/>
+              </linearGradient>
+              <linearGradient id="waterGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#A5C8D4"/>
+                <stop offset="100%" stop-color="#7DA7B8"/>
+              </linearGradient>
+
+              <!-- Shop Awning Gradients -->
+              <linearGradient id="cafeAwning" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#D9776E"/>
+                <stop offset="100%" stop-color="#C05C54"/>
+              </linearGradient>
+              <linearGradient id="techAwning" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#5C7C99"/>
+                <stop offset="100%" stop-color="#456990"/>
+              </linearGradient>
+              <linearGradient id="fashionAwning" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#A8829C"/>
+                <stop offset="100%" stop-color="#8E6582"/>
+              </linearGradient>
+              <linearGradient id="groceryAwning" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#588157"/>
+                <stop offset="100%" stop-color="#4A7C59"/>
+              </linearGradient>
+
+              <!-- Subtle soft shadow -->
+              <filter id="softDrop" x="-10%" y="-10%" width="120%" height="125%">
+                <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#2D2823" flood-opacity="0.08"/>
+              </filter>
+              <filter id="shopGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="10" result="blur"/>
+                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+              </filter>
+            </defs>
+
+            <!-- Background Ground & Lawn -->
+            <rect x="0" y="0" width="1100" height="580" fill="url(#grassGrad)"/>
+
+            <!-- Decorative Garden Planting Edges -->
+            <path d="M 0 0 C 180 30 240 70 320 0 Z" fill="#D3DEC6"/>
+            <path d="M 780 0 C 860 60 920 30 1100 0 Z" fill="#D3DEC6"/>
+            <path d="M 0 580 C 160 520 250 550 340 580 Z" fill="#D3DEC6"/>
+            <path d="M 760 580 C 850 530 940 540 1100 580 Z" fill="#D3DEC6"/>
+
+            <!-- Stone Flagstone Paved Promenade -->
+            <path d="M 320 0 L 780 0 C 760 200 760 380 780 580 L 320 580 C 340 380 340 200 320 0 Z" fill="url(#promenadePave)"/>
+
+            <!-- Subtle Flagstone Tile Details -->
+            <g stroke="#E0D7C9" stroke-width="1.2" opacity="0.6">
+              <line x1="380" y1="90" x2="720" y2="90"/>
+              <line x1="360" y1="180" x2="740" y2="180"/>
+              <line x1="360" y1="270" x2="740" y2="270"/>
+              <line x1="360" y1="360" x2="740" y2="360"/>
+              <line x1="360" y1="450" x2="740" y2="450"/>
+              <line x1="380" y1="530" x2="720" y2="530"/>
+            </g>
+
+            <!-- Central Water Fountain with Calming Rings -->
+            <g id="fountainGroup" transform="translate(550, 290)">
+              <!-- Outer Stone Basin -->
+              <circle r="60" fill="#E6DFD3" stroke="#D3C9BC" stroke-width="3"/>
+              <!-- Water Pool -->
+              <circle r="48" fill="url(#waterGrad)"/>
+              <!-- Gentle Ripple Animation Rings -->
+              <circle class="water-ring ring-1" r="26" fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity="0.6"/>
+              <circle class="water-ring ring-2" r="38" fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity="0.4"/>
+              <!-- Pedestal Fountain Spout -->
+              <circle r="12" fill="#EAE5DB" stroke="#C4B8A6" stroke-width="2"/>
+              <circle r="4" fill="#7DA7B8"/>
+            </g>
+
+            <!-- Garden Planters & Classical Lanterns -->
+            <g id="promenadeDecorations">
+              <!-- Planter 1 -->
+              <rect x="365" y="125" width="22" height="16" rx="4" fill="#C59B76"/>
+              <circle cx="376" cy="120" r="14" fill="#6A9A7B"/>
+              <!-- Planter 2 -->
+              <rect x="715" y="125" width="22" height="16" rx="4" fill="#C59B76"/>
+              <circle cx="726" cy="120" r="14" fill="#6A9A7B"/>
+              <!-- Planter 3 -->
+              <rect x="365" y="440" width="22" height="16" rx="4" fill="#C59B76"/>
+              <circle cx="376" cy="435" r="14" fill="#6A9A7B"/>
+              <!-- Planter 4 -->
+              <rect x="715" y="440" width="22" height="16" rx="4" fill="#C59B76"/>
+              <circle cx="726" cy="435" r="14" fill="#6A9A7B"/>
+              <!-- Promenade Street Lamps -->
+              <circle cx="420" cy="220" r="4" fill="#D48B38" opacity="0.8"/>
+              <circle cx="680" cy="220" r="4" fill="#D48B38" opacity="0.8"/>
+              <circle cx="420" cy="360" r="4" fill="#D48B38" opacity="0.8"/>
+              <circle cx="680" cy="360" r="4" fill="#D48B38" opacity="0.8"/>
+            </g>
+
+            <!-- ============================================== -->
+            <!-- 4 BOUTIQUE SHOP ILLUSTRATIONS -->
+            <!-- ============================================== -->
+
+            <!-- SHOP 1: FOOD COURT - "The Botanical Cafe" (Top Left) -->
+            <g class="shop-node" id="shopNodeFood" transform="translate(50, 40)" data-zone="FOOD">
+              <!-- Dynamic Glow Aura -->
+              <rect class="shop-glow-rect" x="-10" y="-10" width="270" height="225" rx="18" fill="#4A7C59" opacity="0.08"/>
+              <!-- Building Body -->
+              <rect x="0" y="0" width="250" height="205" rx="14" fill="#FFFDF9" stroke="#3D3A36" stroke-width="2.5" filter="url(#softDrop)"/>
+              <!-- Scalloped Striped Awning -->
+              <rect x="6" y="6" width="238" height="42" rx="8" fill="url(#cafeAwning)"/>
+              <path d="M 6 48 Q 20 58 34 48 Q 48 58 62 48 Q 76 58 90 48 Q 104 58 118 48 Q 132 58 146 48 Q 160 58 174 48 Q 188 58 202 48 Q 216 58 230 48 Q 244 58 244 48" fill="none" stroke="#C05C54" stroke-width="3"/>
+              <!-- Store Name Sign -->
+              <rect x="25" y="14" width="200" height="26" rx="6" fill="#2E2822"/>
+              <text x="125" y="32" text-anchor="middle" fill="#FAF6EE" font-family="Outfit, sans-serif" font-weight="600" font-size="12" letter-spacing="0.5">THE BOTANICAL CAFE</text>
+              <!-- Window Display -->
+              <rect x="18" y="62" width="130" height="74" rx="8" fill="#F4EFE6" stroke="#5E584F" stroke-width="1.8"/>
+              <line x1="83" y1="62" x2="83" y2="136" stroke="#5E584F" stroke-width="1.5"/>
+              <line x1="18" y1="99" x2="148" y2="99" stroke="#5E584F" stroke-width="1.5"/>
+              <!-- Warm Shop Interior Glow & Bakery Items -->
+              <circle cx="50" cy="115" r="9" fill="#E8B878"/>
+              <circle cx="115" cy="115" r="8" fill="#C9755B"/>
+              <!-- Wooden Door -->
+              <rect x="162" y="70" width="68" height="118" rx="6" fill="#D9C2A7" stroke="#3D3A36" stroke-width="2"/>
+              <rect x="172" y="80" width="48" height="42" rx="4" fill="#F0EBE1" stroke="#3D3A36" stroke-width="1.5"/>
+              <circle cx="218" cy="132" r="3.5" fill="#3D3A36"/>
+              <!-- Health Seal Pill -->
+              <g class="health-seal" transform="translate(18, 150)">
+                <rect class="seal-bg" x="0" y="0" width="130" height="26" rx="13" fill="#EAF3EC" stroke="#4A7C59" stroke-width="1.8"/>
+                <circle class="seal-dot" cx="14" cy="13" r="5" fill="#4A7C59"/>
+                <text class="seal-text" x="26" y="17" fill="#2D5A3C" font-family="Outfit, sans-serif" font-weight="600" font-size="11">SAFE BUFFER</text>
+              </g>
+              <!-- Stock count badge -->
+              <text class="stock-badge" x="125" y="196" text-anchor="middle" fill="#756C62" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="500">4 SKUs · 405 Units</text>
+            </g>
+
+            <!-- SHOP 2: ELECTRONICS - "Studio Nordics Tech" (Top Right) -->
+            <g class="shop-node" id="shopNodeElec" transform="translate(800, 40)" data-zone="ELEC">
+              <rect class="shop-glow-rect" x="-10" y="-10" width="270" height="225" rx="18" fill="#456990" opacity="0.08"/>
+              <rect x="0" y="0" width="250" height="205" rx="14" fill="#FFFDF9" stroke="#3D3A36" stroke-width="2.5" filter="url(#softDrop)"/>
+              <rect x="6" y="6" width="238" height="42" rx="8" fill="url(#techAwning)"/>
+              <path d="M 6 48 Q 20 58 34 48 Q 48 58 62 48 Q 76 58 90 48 Q 104 58 118 48 Q 132 58 146 48 Q 160 58 174 48 Q 188 58 202 48 Q 216 58 230 48 Q 244 58 244 48" fill="none" stroke="#456990" stroke-width="3"/>
+              <rect x="25" y="14" width="200" height="26" rx="6" fill="#202A36"/>
+              <text x="125" y="32" text-anchor="middle" fill="#FAF6EE" font-family="Outfit, sans-serif" font-weight="600" font-size="12" letter-spacing="0.5">STUDIO NORDICS TECH</text>
+              <!-- Minimalist Tech Glass Window -->
+              <rect x="18" y="62" width="130" height="74" rx="8" fill="#EAF0F6" stroke="#456990" stroke-width="1.8"/>
+              <rect x="36" y="108" width="22" height="16" rx="3" fill="#5C7C99"/>
+              <rect x="94" y="102" width="28" height="22" rx="4" fill="#39526D"/>
+              <!-- Clean Entrance Door -->
+              <rect x="162" y="70" width="68" height="118" rx="6" fill="#D3DCE6" stroke="#3D3A36" stroke-width="2"/>
+              <rect x="172" y="80" width="48" height="42" rx="4" fill="#FFFFFF" stroke="#3D3A36" stroke-width="1.5"/>
+              <circle cx="218" cy="132" r="3.5" fill="#3D3A36"/>
+              <g class="health-seal" transform="translate(18, 150)">
+                <rect class="seal-bg" x="0" y="0" width="130" height="26" rx="13" fill="#EAF3EC" stroke="#4A7C59" stroke-width="1.8"/>
+                <circle class="seal-dot" cx="14" cy="13" r="5" fill="#4A7C59"/>
+                <text class="seal-text" x="26" y="17" fill="#2D5A3C" font-family="Outfit, sans-serif" font-weight="600" font-size="11">SAFE BUFFER</text>
+              </g>
+              <text class="stock-badge" x="125" y="196" text-anchor="middle" fill="#756C62" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="500">4 SKUs · 240 Units</text>
+            </g>
+
+            <!-- SHOP 3: FASHION - "Maison Atelier" (Bottom Left) -->
+            <g class="shop-node" id="shopNodeFash" transform="translate(50, 335)" data-zone="FASH">
+              <rect class="shop-glow-rect" x="-10" y="-10" width="270" height="225" rx="18" fill="#8E6582" opacity="0.08"/>
+              <rect x="0" y="0" width="250" height="205" rx="14" fill="#FFFDF9" stroke="#3D3A36" stroke-width="2.5" filter="url(#softDrop)"/>
+              <rect x="6" y="6" width="238" height="42" rx="8" fill="url(#fashionAwning)"/>
+              <path d="M 6 48 Q 20 58 34 48 Q 48 58 62 48 Q 76 58 90 48 Q 104 58 118 48 Q 132 58 146 48 Q 160 58 174 48 Q 188 58 202 48 Q 216 58 230 48 Q 244 58 244 48" fill="none" stroke="#8E6582" stroke-width="3"/>
+              <rect x="25" y="14" width="200" height="26" rx="6" fill="#33242E"/>
+              <text x="125" y="32" text-anchor="middle" fill="#FAF6EE" font-family="Outfit, sans-serif" font-weight="600" font-size="12" letter-spacing="0.5">MAISON ATELIER</text>
+              <!-- Elegant Arched Boutique Window -->
+              <rect x="18" y="62" width="130" height="74" rx="8" fill="#F7F1F5" stroke="#7A566F" stroke-width="1.8"/>
+              <!-- Mannequin silhouettes -->
+              <ellipse cx="50" cy="100" rx="10" ry="18" fill="#BA93AF"/>
+              <ellipse cx="110" cy="98" rx="11" ry="20" fill="#9C7391"/>
+              <!-- Glazed French Door -->
+              <rect x="162" y="70" width="68" height="118" rx="6" fill="#E6D3DF" stroke="#3D3A36" stroke-width="2"/>
+              <rect x="172" y="80" width="48" height="42" rx="4" fill="#FFFFFF" stroke="#3D3A36" stroke-width="1.5"/>
+              <circle cx="218" cy="132" r="3.5" fill="#3D3A36"/>
+              <g class="health-seal" transform="translate(18, 150)">
+                <rect class="seal-bg" x="0" y="0" width="130" height="26" rx="13" fill="#EAF3EC" stroke="#4A7C59" stroke-width="1.8"/>
+                <circle class="seal-dot" cx="14" cy="13" r="5" fill="#4A7C59"/>
+                <text class="seal-text" x="26" y="17" fill="#2D5A3C" font-family="Outfit, sans-serif" font-weight="600" font-size="11">SAFE BUFFER</text>
+              </g>
+              <text class="stock-badge" x="125" y="196" text-anchor="middle" fill="#756C62" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="500">4 SKUs · 285 Units</text>
+            </g>
+
+            <!-- SHOP 4: GROCERY - "The Rustic Harvest" (Bottom Right) -->
+            <g class="shop-node" id="shopNodeGroc" transform="translate(800, 335)" data-zone="GROC">
+              <rect class="shop-glow-rect" x="-10" y="-10" width="270" height="225" rx="18" fill="#4A7C59" opacity="0.08"/>
+              <rect x="0" y="0" width="250" height="205" rx="14" fill="#FFFDF9" stroke="#3D3A36" stroke-width="2.5" filter="url(#softDrop)"/>
+              <rect x="6" y="6" width="238" height="42" rx="8" fill="url(#groceryAwning)"/>
+              <path d="M 6 48 Q 20 58 34 48 Q 48 58 62 48 Q 76 58 90 48 Q 104 58 118 48 Q 132 58 146 48 Q 160 58 174 48 Q 188 58 202 48 Q 216 58 230 48 Q 244 58 244 48" fill="none" stroke="#4A7C59" stroke-width="3"/>
+              <rect x="25" y="14" width="200" height="26" rx="6" fill="#203324"/>
+              <text x="125" y="32" text-anchor="middle" fill="#FAF6EE" font-family="Outfit, sans-serif" font-weight="600" font-size="12" letter-spacing="0.5">THE RUSTIC HARVEST</text>
+              <!-- Market Window -->
+              <rect x="18" y="62" width="130" height="74" rx="8" fill="#F0F6F1" stroke="#4A7C59" stroke-width="1.8"/>
+              <!-- Produce Crates -->
+              <rect x="30" y="104" width="36" height="20" rx="3" fill="#D99B66"/>
+              <circle cx="48" cy="100" r="7" fill="#C05C54"/>
+              <rect x="85" y="104" width="36" height="20" rx="3" fill="#D99B66"/>
+              <circle cx="103" cy="100" r="7" fill="#E09F3E"/>
+              <!-- Rustic Door -->
+              <rect x="162" y="70" width="68" height="118" rx="6" fill="#D2BEA6" stroke="#3D3A36" stroke-width="2"/>
+              <rect x="172" y="80" width="48" height="42" rx="4" fill="#FFFFFF" stroke="#3D3A36" stroke-width="1.5"/>
+              <circle cx="218" cy="132" r="3.5" fill="#3D3A36"/>
+              <g class="health-seal" transform="translate(18, 150)">
+                <rect class="seal-bg" x="0" y="0" width="130" height="26" rx="13" fill="#EAF3EC" stroke="#4A7C59" stroke-width="1.8"/>
+                <circle class="seal-dot" cx="14" cy="13" r="5" fill="#4A7C59"/>
+                <text class="seal-text" x="26" y="17" fill="#2D5A3C" font-family="Outfit, sans-serif" font-weight="600" font-size="11">SAFE BUFFER</text>
+              </g>
+              <text class="stock-badge" x="125" y="196" text-anchor="middle" fill="#756C62" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="500">4 SKUs · 365 Units</text>
+            </g>
+
+            <!-- Dynamic Strolling Visitors Layer (Clean SVG Figures) -->
+            <g id="visitorsLayer"></g>
+
+            <!-- Vintage Restock Courier Delivery Van -->
+            <g id="courierVan" transform="translate(-100, 260)" style="display: none;">
+              <!-- Van Shadow -->
+              <ellipse cx="30" cy="38" rx="36" ry="10" fill="#2E2822" opacity="0.14"/>
+              <!-- Van Body -->
+              <rect x="0" y="6" width="64" height="28" rx="5" fill="#D48B38" stroke="#3D3A36" stroke-width="2"/>
+              <path d="M 64 14 L 78 14 L 84 24 L 84 34 L 64 34 Z" fill="#D48B38" stroke="#3D3A36" stroke-width="2"/>
+              <rect x="65" y="16" width="14" height="10" rx="2" fill="#FAF6EE" stroke="#3D3A36" stroke-width="1.2"/>
+              <!-- Wheels -->
+              <circle cx="16" cy="34" r="7" fill="#2D2823"/>
+              <circle cx="16" cy="34" r="3" fill="#D3C9BC"/>
+              <circle cx="68" cy="34" r="7" fill="#2D2823"/>
+              <circle cx="68" cy="34" r="3" fill="#D3C9BC"/>
+              <text x="32" y="24" text-anchor="middle" fill="#FAF6EE" font-family="Outfit, sans-serif" font-size="9" font-weight="700">STOCK</text>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Painting Legend Bar -->
+        <div class="promenade-footer-bar">
+          <div class="legend-pills">
+            <span class="legend-pill"><span class="dot safe"></span> Safe Buffer (&gt; 5 Days)</span>
+            <span class="legend-pill"><span class="dot warning"></span> Reorder Buffer (&le; 5 Days)</span>
+            <span class="legend-pill"><span class="dot critical"></span> Critical Stockout (&le; 2 Days)</span>
+          </div>
+          <div class="promenade-tip">💡 Click on any boutique storefront to inspect its shelves and record transactions!</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: OVERVIEW & CHARTS -->
+    <section id="tab-overview" class="tab-screen">
+      <div class="view-header">
+        <div class="title-wrap">
+          <span class="category-badge">Real-Time Aggregation</span>
+          <h2>Executive Inventory Overview</h2>
+          <p>Key inventory indicators, sales momentum, and forecasted depletion timelines across all mall zones.</p>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card-soothing">
+          <div class="kpi-tag-label">TOTAL BOUTIQUE SKUs</div>
+          <div class="kpi-number" id="metricTotalSkus">16</div>
+          <div class="kpi-subtext">Active items in 4 retail sectors</div>
+        </div>
+        <div class="kpi-card-soothing alert-red">
+          <div class="kpi-tag-label">CRITICAL ATTENTION</div>
+          <div class="kpi-number" id="metricCriticalCount">4</div>
+          <div class="kpi-subtext">&le; 2 days of inventory remaining</div>
+        </div>
+        <div class="kpi-card-soothing alert-yellow">
+          <div class="kpi-tag-label">WARNING THRESHOLD</div>
+          <div class="kpi-number" id="metricWarningCount">4</div>
+          <div class="kpi-subtext">&le; 5 days until reorder point</div>
+        </div>
+        <div class="kpi-card-soothing alert-green">
+          <div class="kpi-tag-label">GROSS UNITS SOLD</div>
+          <div class="kpi-number" id="metricUnitsSold">2,902</div>
+          <div class="kpi-subtext" id="metricRevenueText">₹38,410.20 historical revenue</div>
+        </div>
+      </div>
+
+      <!-- Charts Layout -->
+      <div class="charts-row">
+        <!-- Top Sellers Bar Chart -->
+        <div class="chart-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Top Selling Items by Volume</h3>
+              <p class="panel-desc">Highest overall unit consumption across 14 tracked days</p>
+            </div>
+            <span class="panel-chip">Historical Top 5</span>
+          </div>
+          <div class="chart-body" id="topSellersBarsWrapper">
+            <!-- Dynamically populated with clean SVG bar charts -->
+          </div>
+        </div>
+
+        <!-- Stockout Horizon Indicators -->
+        <div class="chart-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Stockout Exhaustion Timelines</h3>
+              <p class="panel-desc">Estimated days before current stock reaches zero</p>
+            </div>
+            <span class="panel-chip">Consumption Velocity</span>
+          </div>
+          <div class="chart-body" id="stockoutHorizonWrapper">
+            <!-- Clean timeline gauges -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 14-Day Sales Matrix Curve -->
+      <div class="chart-panel full-span">
+        <div class="panel-header">
+          <div>
+            <h3>14-Day Mall-Wide Aggregated Footfall & Sales Trend</h3>
+            <p class="panel-desc">Calculated via multi-dimensional array matrix aggregation across all 4 sectors</p>
+          </div>
+          <span class="panel-chip">Zone Matrix Sum</span>
+        </div>
+        <div class="chart-body" id="salesTrendCurveContainer">
+          <!-- Responsive vector line curve -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: BOUTIQUE SHELVES (CATALOG & CRUD) -->
+    <section id="tab-catalog" class="tab-screen">
+      <div class="view-header">
+        <div class="title-wrap">
+          <span class="category-badge">Inventory Catalog & POS</span>
+          <h2>Boutique Shelves & Product Directory</h2>
+          <p>Search, filter, record point-of-sale customer purchases, replenish stock, or add new artisan goods.</p>
+        </div>
+        <div class="header-actions-bar">
+          <button class="btn-action btn-green" id="btnOpenSaleModal">💰 Record Sale</button>
+          <button class="btn-action btn-blue" id="btnOpenRestockModal">📦 Restock</button>
+          <button class="btn-action btn-outline" id="btnUndoTransaction">↩️ Undo Sale</button>
+          <button class="btn-action btn-accent" id="btnOpenAddSkuModal">✨ Add SKU</button>
+        </div>
+      </div>
+
+      <!-- Filters Row -->
+      <div class="filter-strip">
+        <div class="search-box">
+          <span class="search-sym">🔍</span>
+          <input type="text" id="catalogSearch" placeholder="Search by name, SKU ID, or category...">
+        </div>
+        <div class="select-group">
+          <select id="selectZoneFilter" class="soothing-select">
+            <option value="ALL">All Sectors (Entire Promenade)</option>
+            <option value="FOOD">Food Court — Botanical Cafe</option>
+            <option value="ELEC">Electronics — Studio Nordics</option>
+            <option value="FASH">Fashion — Maison Atelier</option>
+            <option value="GROC">Grocery — Rustic Harvest</option>
+          </select>
+          <select id="selectHealthFilter" class="soothing-select">
+            <option value="ALL">All Health Tiers</option>
+            <option value="CRITICAL">🔴 Critical Stock (&le; 2 Days)</option>
+            <option value="WARNING">🟡 Warning Buffer (&le; 5 Days)</option>
+            <option value="SAFE">🟢 Safe Inventory (&gt; 5 Days)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Product Cards Grid -->
+      <div class="product-cards-grid" id="productGridContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- SCREEN 4: SMART REORDER QUEUE -->
+    <section id="tab-reorder" class="tab-screen">
+      <div class="view-header">
+        <div class="title-wrap">
+          <span class="category-badge">PriorityQueue Min-Heap</span>
+          <h2>Automated Replenishment Queue</h2>
+          <p>Priority ranking powered by the industrial Reorder Point formula: <code>ROP = (Forecast &times; LeadTime) + SafetyBuffer</code>. Items facing immediate stockout appear at the top.</p>
+        </div>
+        <button class="btn-action btn-green" id="btnBatchOrderCritical">🚚 Order All Critical Items</button>
+      </div>
+
+      <div class="table-card">
+        <table class="soothing-table" id="tableReorders">
+          <thead>
+            <tr>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>SKU</th>
+              <th>Product Name</th>
+              <th>Current Stock</th>
+              <th>Days Left</th>
+              <th>Suggested Order</th>
+              <th>Lead Time</th>
+              <th>Replenishment Rationale</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyReorders">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SCREEN 5: DEMAND ANALYTICS & 2D MATRIX -->
+    <section id="tab-analytics" class="tab-screen">
+      <div class="view-header">
+        <div class="title-wrap">
+          <span class="category-badge">Predictive Operations Research</span>
+          <h2>Demand Forecasting & Sector Matrix</h2>
+          <p>Fine-tune footfall surge multipliers and analyze performance across 4 mathematical models.</p>
+        </div>
+      </div>
+
+      <!-- Multiplier Card -->
+      <div class="multiplier-card">
+        <div class="multiplier-info-side">
+          <span class="category-badge">Dynamic Scenario Simulator</span>
+          <h3>Weekend & Festival Surge Multiplier</h3>
+          <p>Adjust the slider to simulate holiday rushes (1.0x to 2.5x). Demand velocities and stockout days recalculate across the entire platform in real time.</p>
+        </div>
+        <div class="multiplier-slider-side">
+          <div class="slider-display" id="multiplierSliderText">1.00x Base Footfall</div>
+          <input type="range" id="sliderDemandMultiplier" min="100" max="250" value="100" step="5">
+          <div class="slider-ticks">
+            <span>1.0x Weekday</span>
+            <span>1.5x Weekend</span>
+            <span>2.0x Holiday</span>
+            <span>2.5x Festival</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Sub-Tabs -->
+      <div class="analytics-subnav">
+        <button class="subnav-btn active" data-sub="tab-top-sellers">🏆 Top Sellers (Volume)</button>
+        <button class="subnav-btn" data-sub="tab-slow-movers">🐢 Slow Movers (Velocity)</button>
+        <button class="subnav-btn" data-sub="tab-dead-stock">💀 Dead Stock (Tied Capital)</button>
+        <button class="subnav-btn" data-sub="tab-matrix">🧮 2D Sector Matrix (14-Day)</button>
+      </div>
+
+      <div class="table-card" id="analyticsTableArea">
+        <!-- Dynamically rendered -->
+      </div>
+    </section>
+
+    <!-- SCREEN 6: GENTLE SIMULATION -->
+    <section id="tab-simulation" class="tab-screen">
+      <div class="view-header">
+        <div class="title-wrap">
+          <span class="category-badge">Autonomous Traffic Engine</span>
+          <h2>Gentle Footfall & Purchasing Simulation</h2>
+          <p>A background worker simulates visitors calmly strolling through the promenade and purchasing artisan goods every second.</p>
+        </div>
+        <div class="sim-controls-top">
+          <button class="btn-action btn-blue" id="btnToggleSim">▶ Start Gentle Simulation</button>
+          <div class="speed-selector">
+            <span>Interval:</span>
+            <button class="speed-pill active" data-interval="1200">Normal (1.2s)</button>
+            <button class="speed-pill" data-interval="600">Brisk (0.6s)</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sim-kpi-row">
+        <div class="sim-metric-box">
+          <span class="sim-metric-val" id="simValTicks">0</span>
+          <span class="sim-metric-label">Visitor Footfall Ticks</span>
+        </div>
+        <div class="sim-metric-box green">
+          <span class="sim-metric-val" id="simValPurchases">0</span>
+          <span class="sim-metric-label">Purchases Fulfilled</span>
+        </div>
+        <div class="sim-metric-box red">
+          <span class="sim-metric-val" id="simValStockouts">0</span>
+          <span class="sim-metric-label">Stockout Turnaways</span>
+        </div>
+      </div>
+
+      <div class="sim-split-grid">
+        <!-- Live depletion meters -->
+        <div class="chart-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Real-Time Shelf Depletion Gauges</h3>
+              <p class="panel-desc">Visual stock depletion as visitors buy goods</p>
+            </div>
+            <span class="panel-chip pulse-badge">Live Updates</span>
+          </div>
+          <div class="sim-shelf-meters" id="simShelfMetersContainer">
+            <!-- 4 primary items -->
+          </div>
+        </div>
+
+        <!-- Live Cash Register Audit Feed -->
+        <div class="chart-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Register Audit Trail</h3>
+              <p class="panel-desc">Real-time log of customer transactions and restocks</p>
+            </div>
+            <span class="panel-chip">Transaction Log</span>
+          </div>
+          <div class="sim-event-feed" id="simEventFeed">
+            <div class="feed-entry system">System initialized. Press 'Start Gentle Simulation' to release promenade visitors.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SOOTHING BOTTOM TICKER -->
+  <footer class="app-ticker">
+    <div class="ticker-prefix">
+      <span class="ticker-icon">📢</span> StockHome Bulletin
+    </div>
+    <div class="ticker-body">
+      <div class="ticker-content" id="liveTickerText">Welcome to StockHome. All 4 boutiques are operating with optimal safety stock buffers.</div>
+    </div>
+    <div class="ticker-audit" id="tickerAuditPill">Audit: Nominal</div>
+  </footer>
+
+  <!-- ============================================== -->
+  <!-- CRISP CLEAN MODALS (NO BLURS) -->
+  <!-- ============================================== -->
+
+  <!-- Modal 1: Record Sale -->
+  <div class="modal-scrim" id="modalSale">
+    <div class="modal-window">
+      <div class="modal-top">
+        <h3>Record Customer Checkout</h3>
+        <button class="modal-btn-close" data-modal="modalSale">&times;</button>
+      </div>
+      <div class="modal-content">
+        <label>Select Artisan Product:</label>
+        <select id="inputSaleProduct" class="soothing-select full"></select>
+        <label>Quantity to Purchase:</label>
+        <input type="number" id="inputSaleQty" class="soothing-input" min="1" max="100" value="1">
+        <div class="modal-callout" id="salePreviewCallout"></div>
+      </div>
+      <div class="modal-bottom">
+        <button class="btn-action btn-outline" data-modal="modalSale">Cancel</button>
+        <button class="btn-action btn-green" id="btnConfirmSale">Complete Purchase (₹)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Restock -->
+  <div class="modal-scrim" id="modalRestock">
+    <div class="modal-window">
+      <div class="modal-top">
+        <h3>Restock Boutique Supplies</h3>
+        <button class="modal-btn-close" data-modal="modalRestock">&times;</button>
+      </div>
+      <div class="modal-content">
+        <label>Select Product to Replenish:</label>
+        <select id="inputRestockProduct" class="soothing-select full"></select>
+        <label>Restock Units:</label>
+        <input type="number" id="inputRestockQty" class="soothing-input" min="1" max="500" value="25">
+      </div>
+      <div class="modal-bottom">
+        <button class="btn-action btn-outline" data-modal="modalRestock">Cancel</button>
+        <button class="btn-action btn-blue" id="btnConfirmRestock">Dispatch Delivery Van</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Add SKU -->
+  <div class="modal-scrim" id="modalAddSku">
+    <div class="modal-window">
+      <div class="modal-top">
+        <h3>Add New Artisan Product</h3>
+        <button class="modal-btn-close" data-modal="modalAddSku">&times;</button>
+      </div>
+      <div class="modal-content">
+        <label>Host Boutique Sector:</label>
+        <select id="inputNewZone" class="soothing-select full">
+          <option value="FOOD">Food Court — The Botanical Cafe</option>
+          <option value="ELEC">Electronics — Studio Nordics Tech</option>
+          <option value="FASH">Fashion — Maison Atelier</option>
+          <option value="GROC">Grocery — The Rustic Harvest</option>
+        </select>
+        <label>Unique SKU ID (e.g. F105):</label>
+        <input type="text" id="inputNewId" class="soothing-input" placeholder="e.g. F105">
+        <label>Product Name:</label>
+        <input type="text" id="inputNewName" class="soothing-input" placeholder="e.g. Cardamom Cinnamon Bun">
+        <div class="input-duo">
+          <div>
+            <label>Retail Price (₹):</label>
+            <input type="number" id="inputNewPrice" class="soothing-input" step="0.01" value="8.50">
+          </div>
+          <div>
+            <label>Initial Units:</label>
+            <input type="number" id="inputNewStock" class="soothing-input" value="45">
+          </div>
+        </div>
+        <label>Product Classification:</label>
+        <div class="radio-pill-group">
+          <label class="radio-pill"><input type="radio" name="newSkuType" value="perishable" checked> Perishable (Shelf Life)</label>
+          <label class="radio-pill"><input type="radio" name="newSkuType" value="nonperishable"> Durable (Warranty)</label>
+        </div>
+        <label id="lblNewSkuParam">Shelf Life in Days:</label>
+        <input type="number" id="inputNewParam" class="soothing-input" value="4">
+      </div>
+      <div class="modal-bottom">
+        <button class="btn-action btn-outline" data-modal="modalAddSku">Cancel</button>
+        <button class="btn-action btn-accent" id="btnConfirmAddSku">Register Product</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Boutique Inspection Shelf -->
+  <div class="modal-scrim" id="modalInspect">
+    <div class="modal-window wide">
+      <div class="modal-top">
+        <h3 id="inspectShopTitle">Boutique Inspection</h3>
+        <button class="modal-btn-close" data-modal="modalInspect">&times;</button>
+      </div>
+      <div class="modal-content">
+        <div class="inspect-stats-banner" id="inspectStatsBanner"></div>
+        <h4 style="margin: 14px 0 8px; font-size: 15px;">Items on Display:</h4>
+        <div class="inspect-table-wrap" id="inspectTableWrap"></div>
+      </div>
+      <div class="modal-bottom">
+        <button class="btn-action btn-outline" data-modal="modalInspect">Close</button>
+        <button class="btn-action btn-blue" id="btnGoToBoutiqueCatalog">Open in Directory &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,3 +1,3 @@
 @echo off
 title StockHome Webapp
-start "" "%~dp0webapp\index.html"
+start "" "%~dp0index.html"
