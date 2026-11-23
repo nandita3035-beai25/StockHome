@@ -1,14 +1,15 @@
 # 🌿 StockHome — Smart Inventory Demand Predictor ("Mall of Tomorrow")
 
 [![Java](https://img.shields.io/badge/Java-8%20%7C%2011%20%7C%2017%2B-blue.svg)](https://www.java.com/)
-[![Webapp](https://img.shields.io/badge/Webapp-Zero--Dependency%20HTML5%2FCSS3%2FJS-success.svg)](open_webapp.bat)
+[![SelfCheck](https://img.shields.io/badge/SelfCheck-5%2F5%20PASS-success.svg)]()
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20OOP%20%7C%20Observer%20%7C%20Mediator-orange.svg)]()
 [![Course](https://img.shields.io/badge/Chitkara-25CSE0202%20Programming%20in%20Java-purple.svg)]()
 
-> **StockHome** is an enterprise-grade retail inventory demand forecasting system modeled around a high-traffic lifestyle shopping center (**"Mall of Tomorrow"**). It combines operational inventory science (weighted velocity, lead-time buffering, stockout horizon forecasting, and min-heap replenishment) with three presentation layers:
-> 1. **Standalone Web Application**: A calm, soothing Scandinavian architectural painting of *The Garden Promenade* with vector SVG analytics, live simulation, and zero build setup.
+> **StockHome** is an enterprise-grade retail inventory demand forecasting system modeled around a high-traffic shopping complex (**"Mall of Tomorrow"**). It implements operational inventory science (14-day linear weighted moving average velocity, lead-time buffering, stockout horizon forecasting, and min-heap priority queue replenishment) across:
+> 1. **Core Java Backend**: Strict OOP modeling, multithreaded simulation, custom checked exceptions, and synchronized thread-safe operations.
 > 2. **Desktop Swing/AWT Graphical Frontend**: Modern Java 2D canvas with antialiased storefront rendering, animated sprite walkers, interactive charts, and observer mediation.
-> 3. **Console Terminal Interface**: A high-efficiency ASCII terminal menu featuring an ANSI 2D grid floor plan buffer and live ANSI animations.
+> 3. **Console Terminal Interface**: High-efficiency ASCII terminal menu featuring an ANSI 2D grid floor plan buffer and live ANSI animations.
+> 4. **Optional Bonus Webapp (`webapp/`)**: An interactive Scandinavian architectural vector painting of *The Garden Promenade* with SVG charts and client-side simulation.
 
 ---
 
@@ -23,9 +24,9 @@
          ┌─────────────────────────────────────────────┼─────────────────────────────────────────────┐
          ▼                                             ▼                                             ▼
 ┌──────────────────┐                         ┌───────────────────┐                         ┌──────────────────┐
-│  Standalone Web  │                         │  Swing / AWT GUI  │                         │  Console Engine  │
-│  The Promenade   │                         │  Desktop Client   │                         │  ANSI Terminal   │
-│ (HTML5/CSS3/JS)  │                         │  (Java 2D Canvas) │                         │ (char[9][45] 2D) │
+│  Swing / AWT GUI │                         │  Console Engine   │                         │ Optional Webapp  │
+│  Desktop Client  │                         │  ANSI Terminal    │                         │  (webapp/ Demo)  │
+│ (Java 2D Canvas) │                         │ (char[9][45] 2D)  │                         │ (HTML5/CSS3/JS)  │
 └────────┬─────────┘                         └─────────┬─────────┘                         └────────┬─────────┘
          │                                             │                                            │
          │                                   ┌─────────┴─────────┐                                  │
@@ -68,25 +69,29 @@ StockHome manages four distinct mall retail zones:
 - 🍎 **Apex Super Grocery** (`GROC`): Organic Milk, Sourdough Loaf, Pink Salt (*Daily consumables, fast-decay buffers*).
 
 ### 2. 📐 Operations Research & Demand Forecasting Engine
-- **3-Day Weighted Moving Average (ADS)**:
-  $$\text{ADS} = \frac{1 \cdot D_{t-2} + 2 \cdot D_{t-1} + 3 \cdot D_{t}}{1 + 2 + 3} \times \text{Multiplier}$$
-  Weights recent days progressively higher ($[1, 2, 3]$) to capture demand velocity immediately.
+- **14-Day Linear Weighted Moving Average (WMA)**:
+  For $N$ days of sales history ($N \le 14$), each day $i$ from 1 to $N$ is assigned linear weight $w_i = i$:
+  $$\text{WMA} = \frac{\sum_{i=1}^N (i \times \text{Sales}_i)}{\sum_{i=1}^N i} \times \text{Demand Multiplier}$$
+  where $\sum_{i=1}^N i = \frac{N(N+1)}{2}$. Older days receive weight 1, while recent days receive progressively higher weights (up to $N$) to capture demand surges quickly.
 - **Stockout Depletion Horizon**:
-  $$\text{Days Until Stockout} = \left\lfloor \frac{\text{Current Stock}}{\text{ADS}} \right\rfloor$$
+  $$\text{Days Until Stockout} = \left\lfloor \frac{\text{Current Stock}}{\text{WMA}} \right\rfloor$$
 - **Reorder Point (ROP) & Safety Stock**:
-  $$\text{ROP} = (\text{ADS} \times \text{LeadTime}) + \text{SafetyStock}$$
-  *Perishable* goods compute safety stock factoring shelf-life decay; *Non-Perishable* goods factor supplier transit delays.
+  $$\text{ROP} = (\text{WMA} \times \text{LeadTime}) + \text{SafetyStock}$$
+  *Perishable* goods compute safety stock factoring shelf-life decay ($\lceil \text{WMA} \times 1.5 \rceil$); *Non-Perishable* goods factor supplier transit delays ($\lceil \text{WMA} \times 3.0 \rceil$).
+- **Suggested Reorder Quantity**:
+  $$\text{Target Stock} = ((\text{LeadTime} + 7) \times \text{WMA}) + \text{SafetyStock}$$
+  $$\text{Suggested Quantity} = \max(10, \lceil \text{Target Stock} - \text{Current Stock} \rceil)$$
 - **Min-Heap Priority Queue Ranking**:
   Replenishment suggestions implement `Comparable<ReorderSuggestion>` and are evaluated by urgency:
   - 🔴 **CRITICAL**: $\le 2\text{ days remaining}$
   - 🟡 **WARNING**: $\le 5\text{ days remaining}$
   - 🟢 **SAFE**: Healthy buffer stock
 
-### 3. 🌿 The Garden Promenade (Modern Webapp)
-- **Serene Scandinavian Aesthetic**: Calm sage, warm slate, crisp cream, and forest green palette with clean typography and zero blurry glow filters.
-- **Layered 2D Architectural Vector Painting**: An architectural SVG composition of "The Garden Promenade" with striped boutique awnings, arched glass clerestory, planter boxes, ficus trees, and walking visitors.
-- **Zero-Dependency Vector Visualizations**: Pure SVG donut gauges, depletion bar charts, and 14-day area trend curves.
-- **Built-in Web Audio Feedback**: Soft acoustic chimes, wooden tap effects, and cash register tones synthesized natively via the browser's Web Audio API (no external MP3/WAV files).
+### 3. 🌅 Daily Sales Tracking & "Next Day" Lifecycle
+- Purchases during the active business day accumulate in `Product.todaysSales` without polluting historical averages prematurely.
+- **`closeDay()`** appends `todaysSales` into `salesHistory`, resets `todaysSales` to 0, and trims `salesHistory` so it stays strictly bounded at a maximum of 14 days (discarding the oldest day).
+- **`InventoryManager.nextDay()`** closes the day across all products and zones, and records an entry in the activity log.
+- Available via Option 12 in the console menu and the **"NEXT DAY (CLOSE DAY)"** button in the Swing GUI.
 
 ### 4. 🖥️ Desktop Swing/AWT Graphical Frontend
 - **100% Native Java 2D**: No JavaFX, no heavy third-party UI libraries. Runs seamlessly on standard JRE 8+.
@@ -97,20 +102,26 @@ StockHome manages four distinct mall retail zones:
 ### 5. ⚡ Multithreaded Simulation Engine
 - Background worker thread (`SimulationService` implementing `Runnable`) generates real-time customer footfall.
 - Thread-safe concurrency: All stock mutations in `InventoryManager` are guarded by `synchronized` monitor locks.
-- Graceful shutdown sequence using `volatile boolean running`, `workerThread.interrupt()`, and `workerThread.join(2000)`.
+- Graceful shutdown sequence using `volatile boolean running`, `workerThread.interrupt()`, and non-blocking join via helper thread.
+
+### 6. 🌐 Optional Bonus Webapp (`webapp/`)
+- Located in the `webapp/` subfolder.
+- Zero-dependency client-side demo featuring Scandinavian architectural vector aesthetics, pure SVG charts, and Web Audio.
+- Uses identical 14-day linear WMA and ROP math models.
 
 ---
 
 ## 🚀 Quickstart & How to Run
 
-### Option A: Standalone Web Application (Zero Setup / Instant)
-No compiler or web server needed. Double-click to launch in any modern browser:
-- **Windows**: Double-click `open_webapp.bat` or open `index.html`.
-- **macOS / Linux**: Open `index.html` in your browser or run:
-  ```bash
-  chmod +x open_webapp.sh
-  ./open_webapp.sh
-  ```
+### Option A: Run Built-in SelfCheck Suite
+Verifies all mathematical invariants, undo transactions, and day-closing boundaries:
+```bash
+# Compile
+javac -d bin src\com\mall\*.java src\com\mall\exceptions\*.java src\com\mall\model\*.java src\com\mall\service\*.java src\com\mall\ui\*.java src\com\mall\ui\gui\*.java src\com\mall\util\*.java
+
+# Execute SelfCheck
+java -cp bin com.mall.util.SelfCheck
+```
 
 ---
 
@@ -119,11 +130,11 @@ Requirements: JDK 8 or higher.
 - **Windows**: Double-click `run.bat` (defaults to GUI mode).
 - **Command Line**:
   ```bash
-  # Compile
-  javac -d bin -sourcepath src src/com/mall/Main.java
-
-  # Run GUI
   java -cp bin com.mall.Main --gui
+  ```
+- **Custom Event Multiplier**:
+  ```bash
+  java -cp bin com.mall.Main --gui --event 1.5
   ```
 
 ---
@@ -137,6 +148,12 @@ Runs the interactive ASCII terminal with ANSI colors, 2D floor plan rendering, a
 
 ---
 
+### Option D: Optional Bonus Webapp
+Launch the browser demo:
+- Double-click `open_webapp.bat` in the root folder, or navigate to `webapp/` and open `index.html`.
+
+---
+
 ## 📂 Project Directory Structure
 
 ```
@@ -144,9 +161,9 @@ Smart Inventory/
 ├── src/                                  # Java Core Backend & UI Source
 │   └── com/
 │       └── mall/
-│           ├── Main.java                 # Universal launcher (Console & GUI flag)
+│           ├── Main.java                 # Universal launcher (Console, GUI, and --event flag)
 │           ├── model/                    # Domain Layer (Lect. 1, 5, 8)
-│           │   ├── Product.java          # Abstract base entity
+│           │   ├── Product.java          # Abstract base entity (todaysSales, closeDay, WMA)
 │           │   ├── PerishableProduct.java# Subclass (shelf-life polymorphism)
 │           │   ├── NonPerishableProduct.java# Subclass (lead-time polymorphism)
 │           │   ├── Predictable.java      # Interface for predictive math
@@ -155,25 +172,28 @@ Smart Inventory/
 │           │   ├── SaleTransaction.java  # Immutable transaction record
 │           │   └── UrgencyLevel.java     # Urgency enum (CRITICAL/WARNING/SAFE)
 │           ├── service/                  # Business Logic Layer (Lect. 6, 9-16)
-│           │   ├── InventoryManager.java # Thread-safe CRUD, LinkedHashMap, Deque undo
-│           │   ├── DemandPredictor.java  # WMA, 2D matrix (int[4][14]), ROP math
-│           │   └── SimulationService.java# Runnable worker thread, safe shutdown
-│           ├── exception/                # Checked Exception Hierarchy (Lect. 3)
+│           │   ├── InventoryManager.java # Thread-safe CRUD, LinkedHashMap, Deque undo (cap 20), nextDay()
+│           │   ├── DemandPredictor.java  # 14-day WMA, 2D matrix (int[4][14]), ROP math
+│           │   └── SimulationService.java# Runnable worker thread, volatile fields, safe shutdown
+│           ├── exceptions/               # Checked Exception Hierarchy (Lect. 3)
 │           │   ├── OutOfStockException.java
 │           │   ├── InvalidQuantityException.java
 │           │   └── ProductNotFoundException.java
 │           ├── util/
-│           │   └── DataSeeder.java       # Seeds 12+ products with 14-day history
+│           │   ├── DataSeeder.java       # Seeds 16 products across 4 zones with 14-day history
+│           │   └── SelfCheck.java        # Assertion test suite (5/5 PASS)
 │           └── ui/                       # Presentation Layers
 │               ├── AnsiTheme.java        # Terminal colors & fallback
+│               ├── ConsoleColors.java    # ANSI color formatters
+│               ├── ConsoleAnimation.java # Shutter & typing animations
 │               ├── MallMapRenderer.java  # char[9][45] 2D floor plan buffer
-│               ├── MenuController.java   # Defensive console loop & validation
+│               ├── MenuController.java   # Defensive console loop & Next Day option
 │               └── gui/                  # Swing/AWT Desktop Application
 │                   ├── GuiMain.java      # EDT launcher via SwingUtilities
 │                   ├── MainFrame.java    # CardLayout desktop window shell
 │                   ├── SplashScreen.java # Animated rolling shutter splash
 │                   ├── Theme.java        # Color theory, card painting helpers
-│                   ├── GuiMediator.java  # Mediator pattern for EDT dispatches
+│                   ├── GuiMediator.java  # Mediator pattern & non-blocking simulation stop
 │                   ├── InventoryListener.java # Observer interface
 │                   ├── SidebarPanel.java # Navigation sidebar
 │                   ├── TickerPanel.java  # Marquee critical alert banner
@@ -182,15 +202,18 @@ Smart Inventory/
 │                   ├── ProductsPanel.java# JTable with animated progress bars
 │                   ├── ReorderPanel.java # PriorityQueue interactive restock
 │                   ├── ReportsPanel.java # Multiplier slider & analytical tabs
-│                   └── SimulationPanel.java# Live footfall simulation control
-├── index.html                            # Standalone Web Application
-├── style.css                             # Calm Scandinavian styling & SVG layout
-├── app.js                                # Web engine, SVG charts, Web Audio
-├── open_webapp.bat                       # 1-click Windows Webapp launcher
-├── open_webapp.sh                        # 1-click Unix Webapp launcher
+│                   └── SimulationPanel.java# Live footfall simulation control & Next Day button
+├── webapp/                               # Optional Bonus Web Application Demo
+│   ├── index.html                        # Standalone Web Application
+│   ├── style.css                         # Calm Scandinavian styling & SVG layout
+│   ├── app.js                            # Web engine, SVG charts, 14-day WMA & ROP math
+│   ├── open_webapp.bat                   # 1-click Windows Webapp launcher
+│   └── open_webapp.sh                    # 1-click Unix Webapp launcher
+├── open_webapp.bat                       # Root convenience launcher for webapp
 ├── run.bat                               # 1-click Windows Java GUI launcher
 ├── run.sh                                # 1-click Unix Java GUI launcher
-└── README.md                             # Project documentation
+├── .gitignore                            # Clean git exclusion rules
+└── README.md                             # Comprehensive project documentation
 ```
 
 ---
@@ -203,13 +226,6 @@ Smart Inventory/
 | **Lect. 2: Strings & Arrays** | Multi-Dimensional Arrays, StringBuilder | `int[4][14]` sales matrix in `DemandPredictor`; `char[9][45]` 2D ASCII grid in `MallMapRenderer`; `StringBuilder` in formatting loops. |
 | **Lect. 3: Exceptions** | Custom Checked Exceptions | `OutOfStockException`, `InvalidQuantityException`, `ProductNotFoundException` caught with graceful UI dialogs. |
 | **Lect. 4: Validation** | Console input defensive handling | Robust `Scanner` parsing and input recovery in `MenuController`. |
-| **Lect. 5-7: Collections** | ArrayList, HashMap, LinkedHashMap, PriorityQueue, ArrayDeque, Iterator | `ArrayList` (14-day sales), `HashMap` (SKU lookup), `LinkedHashMap` (zone order), `PriorityQueue` (Min-heap reorders), `ArrayDeque` (undo stack). |
+| **Lect. 5-7: Collections** | ArrayList, HashMap, LinkedHashMap, PriorityQueue, ArrayDeque, Iterator | `ArrayList` (14-day sales), `HashMap` (SKU lookup), `LinkedHashMap` (zone order), `PriorityQueue` (Min-heap reorders), `ArrayDeque` (undo stack capped at 20). |
 | **Lect. 8: Sorting** | Comparable & Comparator | `Comparable` on `ReorderSuggestion` (urgency ranking); custom `Comparator`s on Top Sellers & Dead Stock. |
 | **Lect. 9-16: Multithreading** | Runnable, Synchronization, Thread Safety | `SimulationService` worker thread; `synchronized` monitor locks on `InventoryManager`; non-blocking EDT dispatch; clean `interrupt()`/`join()` shutdown. |
-
----
-
-## 👥 Contributors & Academic Viva Preparation
-
-- Comprehensive **Viva Voce Cheat Sheet** (`Viva_Cheat_Sheet.pdf`) and **Component & Concept Mapping Guide** (`StockHome_What_Is_Used_Where_Guide.pdf`) are available as separate deliverables on your Desktop for viva examination preparation.
-- Developed for **Programming in Java (25CSE0202)**, Chitkara University.
