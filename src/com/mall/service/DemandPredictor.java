@@ -50,10 +50,12 @@ public class DemandPredictor {
 
     public DemandPredictor() {
         this.demandMultiplier = 1.0; // Standard weekday baseline
+        Product.setGlobalDemandMultiplier(1.0);
     }
 
     public DemandPredictor(double demandMultiplier) {
         this.demandMultiplier = demandMultiplier > 0.0 ? demandMultiplier : 1.0;
+        Product.setGlobalDemandMultiplier(this.demandMultiplier);
     }
 
     public double getDemandMultiplier() {
@@ -63,6 +65,7 @@ public class DemandPredictor {
     public void setDemandMultiplier(double demandMultiplier) {
         if (demandMultiplier > 0.0) {
             this.demandMultiplier = demandMultiplier;
+            Product.setGlobalDemandMultiplier(demandMultiplier);
         }
     }
 

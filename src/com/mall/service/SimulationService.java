@@ -24,10 +24,10 @@ public class SimulationService implements Runnable {
     private final InventoryManager inventoryManager;
     private final Random random;
     private volatile boolean running;
-    private int simulationTicks;
-    private int successfulPurchases;
-    private int outOfStockIncidents;
-    private String lastEvent;
+    private volatile int simulationTicks;
+    private volatile int successfulPurchases;
+    private volatile int outOfStockIncidents;
+    private volatile String lastEvent;
 
     public SimulationService(InventoryManager inventoryManager) {
         this.inventoryManager = inventoryManager;
@@ -100,19 +100,19 @@ public class SimulationService implements Runnable {
         return running;
     }
 
-    public int getSimulationTicks() {
+    public synchronized int getSimulationTicks() {
         return simulationTicks;
     }
 
-    public int getSuccessfulPurchases() {
+    public synchronized int getSuccessfulPurchases() {
         return successfulPurchases;
     }
 
-    public int getOutOfStockIncidents() {
+    public synchronized int getOutOfStockIncidents() {
         return outOfStockIncidents;
     }
 
-    public String getLastEvent() {
+    public synchronized String getLastEvent() {
         return lastEvent;
     }
 }

@@ -54,7 +54,7 @@ public class MenuController {
         boolean exitRequested = false;
         while (!exitRequested) {
             printMainMenu();
-            int choice = readIntInput("Enter menu selection (1 - 12): ", 1, 12);
+            int choice = readIntInput("Enter menu selection (1 - 13): ", 1, 13);
 
             try {
                 switch (choice) {
@@ -92,11 +92,14 @@ public class MenuController {
                         handleLiveSimulationMode();
                         break;
                     case 12:
+                        handleNextDay();
+                        break;
+                    case 13:
                         exitRequested = true;
                         System.out.println(ConsoleColors.bold("\nThank you for visiting Mall of Tomorrow! Closing systems... Goodbye!\n"));
                         break;
                     default:
-                        System.out.println(ConsoleColors.red("Invalid option. Please choose between 1 and 12."));
+                        System.out.println(ConsoleColors.red("Invalid option. Please choose between 1 and 13."));
                 }
             } catch (Exception e) {
                 System.out.println(ConsoleColors.red("An unexpected error occurred: " + e.getMessage()));
@@ -135,7 +138,8 @@ public class MenuController {
         System.out.println("  9.  Inventory Reports (Top Sellers, Slow Movers, Dead Stock, 2D Matrix)");
         System.out.println("  10. Undo Last Sale (LIFO Deque Stack)");
         System.out.println("  11. Start Live Simulation Mode (Background Thread + Live Stock Bars)");
-        System.out.println("  12. Exit Application");
+        System.out.println("  12. Advance to Next Day (Close Today's Sales & Roll History)");
+        System.out.println("  13. Exit Application");
         System.out.println(ConsoleColors.cyan("--------------------------------------------------------------------------------"));
         System.out.printf("  [Settings: ANSI Colors=%s | Animations=%s | Event Multiplier=%.2fx]\n",
                 ConsoleColors.isAnsiEnabled() ? "ON" : "OFF",
@@ -557,6 +561,14 @@ public class MenuController {
                 simulation.getSimulationTicks(), simulation.getSuccessfulPurchases(), simulation.getOutOfStockIncidents())));
     }
 
+    private void handleNextDay() {
+        System.out.println(ConsoleColors.bold("\n--- ADVANCE TO NEXT DAY ---"));
+        System.out.println("Closing the current retail day across all mall zones...");
+        manager.nextDay();
+        System.out.println(ConsoleColors.green("Success: Today's sales figures have been archived into 14-day history."));
+        System.out.println(ConsoleColors.green("All today's sales counters reset to 0. A new retail day has begun!"));
+    }
+
     // =========================================================================
     // INPUT VALIDATION HELPERS (Guaranteed No Crashes)
     // =========================================================================
@@ -565,7 +577,7 @@ public class MenuController {
         while (true) {
             System.out.print(prompt);
             if (!scanner.hasNextLine()) {
-                return 12; // Return Exit option on input stream termination / EOF
+                return 13; // Return Exit option on input stream termination / EOF
             }
             String line = scanner.nextLine().trim();
             try {

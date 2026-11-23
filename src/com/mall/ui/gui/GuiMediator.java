@@ -128,14 +128,22 @@ public class GuiMediator {
         if (simulationService != null) {
             simulationService.stopSimulation();
         }
-        if (simulationThread != null) {
-            simulationThread.interrupt();
-            try {
-                simulationThread.join(1000);
-            } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
-            }
-            simulationThread = null;
+        final Thread threadToStop = simulationThread;
+        simulationThread = null;
+
+        if (threadToStop != null) {
+            threadToStop.interrupt();
+            // Join with a short timeout off the Event Dispatch Thread (EDT) via helper thread
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        threadToStop.join(1000);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }, "GuiSimStopperThread").start();
         }
         notifyInventoryUpdated();
     }

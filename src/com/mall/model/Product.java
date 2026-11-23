@@ -18,6 +18,7 @@ import java.util.List;
 public abstract class Product implements Predictable, Comparable<Product> {
     // Static variable shared across all instances
     private static int totalProductsCreated = 0;
+    private static double globalDemandMultiplier = 1.0;
 
     // Encapsulated instance variables
     private String id;
@@ -25,6 +26,7 @@ public abstract class Product implements Predictable, Comparable<Product> {
     private double price;
     private int stock;
     private String category;
+    private int todaysSales = 0; // Tracks units sold today before closeDay()
     private List<Integer> salesHistory; // ArrayList storing past daily sales units
 
     /**
@@ -79,12 +81,43 @@ public abstract class Product implements Predictable, Comparable<Product> {
     // PREDICTABLE INTERFACE IMPLEMENTATION
     // ==========================================
 
+    public static void setGlobalDemandMultiplier(double multiplier) {
+        if (multiplier > 0.0) {
+            globalDemandMultiplier = multiplier;
+        }
+    }
+
+    public static double getGlobalDemandMultiplier() {
+        return globalDemandMultiplier;
+    }
+
     /**
-     * Baseline arithmetic mean of historical daily sales.
-     * Returns 0.0 if no sales history exists.
+     * Calculates the linear weighted moving average (WMA) of a product's sales history:
+     * Older days receive weight 1, while recent days receive linearly higher weight (up to N).
+     * Scaled by the active global demand multiplier.
      */
-    @Override
-    public double averageDailySales() {
+    public double calculateWeightedDailySales() {
+        if (salesHistory == null || salesHistory.isEmpty()) {
+            return 0.0;
+        }
+        int n = salesHistory.size();
+        double weightedSum = 0.0;
+        int totalWeight = 0;
+        for (int i = 0; i < n; i++) {
+            int weight = i + 1;
+            weightedSum += weight * salesHistory.get(i);
+            totalWeight += weight;
+        }
+        if (totalWeight == 0) {
+            return 0.0;
+        }
+        return (weightedSum / totalWeight) * globalDemandMultiplier;
+    }
+
+    /**
+     * Baseline arithmetic mean of historical daily sales (unweighted).
+     */
+    public double unweightedDailySales() {
         if (salesHistory == null || salesHistory.isEmpty()) {
             return 0.0;
         }
@@ -96,12 +129,20 @@ public abstract class Product implements Predictable, Comparable<Product> {
     }
 
     /**
-     * Calculates days until stockout: Current Stock / Average Daily Sales.
-     * Returns 999 (effective infinity) if product has zero sales.
+     * Implements Predictable: returns the active weighted daily sales velocity.
+     */
+    @Override
+    public double averageDailySales() {
+        return calculateWeightedDailySales();
+    }
+
+    /**
+     * Calculates days until stockout: Current Stock / Weighted Daily Sales Rate.
+     * Returns 999 (effective infinity) if product has zero sales or negligible demand.
      */
     @Override
     public int daysUntilStockout() {
-        double avg = averageDailySales();
+        double avg = calculateWeightedDailySales();
         if (avg <= 0.0001) {
             return 999; // Dead stock or no sales recorded yet
         }
@@ -132,17 +173,43 @@ public abstract class Product implements Predictable, Comparable<Product> {
     }
 
     /**
-     * Appends today's sales figure to historical tracking.
+     * Records today's sales units without appending to 14-day history yet.
      */
     public synchronized void recordSaleEntry(int units) {
-        this.salesHistory.add(Integer.valueOf(units)); // Explicit wrapper class usage
+        if (units > 0) {
+            this.todaysSales += units;
+        }
     }
 
     /**
-     * Sum of all past units sold across recorded history.
+     * Closes today's sales: appends today's sales figure to 14-day history,
+     * resets today's sales to 0, and trims history so it stays at max 14 days.
+     */
+    public synchronized void closeDay() {
+        this.salesHistory.add(Integer.valueOf(this.todaysSales));
+        this.todaysSales = 0;
+        while (this.salesHistory.size() > 14) {
+            this.salesHistory.remove(0); // Discard oldest entry
+        }
+    }
+
+    public synchronized int getTodaysSales() {
+        return todaysSales;
+    }
+
+    public synchronized void setTodaysSales(int todaysSales) {
+        this.todaysSales = Math.max(0, todaysSales);
+    }
+
+    public synchronized void deductTodaysSales(int units) {
+        this.todaysSales = Math.max(0, this.todaysSales - units);
+    }
+
+    /**
+     * Sum of all past units sold across recorded history plus today's sales.
      */
     public int getTotalUnitsSold() {
-        int total = 0;
+        int total = todaysSales;
         for (Integer sale : salesHistory) {
             total += sale.intValue();
         }

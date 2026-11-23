@@ -78,6 +78,22 @@ public class SimulationPanel extends JPanel implements InventoryListener {
         });
         leftControl.add(toggleSimBtn);
 
+        JButton nextDayBtn = Theme.createButton("NEXT DAY (CLOSE DAY)", Theme.TEAL);
+        nextDayBtn.setPreferredSize(new Dimension(190, 42));
+        nextDayBtn.setFont(Theme.FONT_BODY_BOLD);
+        nextDayBtn.setToolTipText("Close today's sales and roll 14-day history for all products");
+        nextDayBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mediator.getInventoryManager().nextDay();
+                mediator.notifyInventoryUpdated();
+                JOptionPane.showMessageDialog(SimulationPanel.this,
+                    "Day closed successfully! Today's sales archived into 14-day history and counters reset.",
+                    "Next Day Rolled", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        leftControl.add(nextDayBtn);
+
         statusPill = new JLabel("STATUS: IDLE");
         statusPill.setFont(Theme.FONT_BODY_BOLD);
         statusPill.setForeground(Theme.textMuted());

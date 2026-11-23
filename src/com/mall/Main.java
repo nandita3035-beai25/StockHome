@@ -20,6 +20,9 @@ import com.mall.util.DataSeeder;
 public class Main {
 
     public static void main(String[] args) {
+        double customMultiplier = 1.0;
+        boolean hasCustomMultiplier = false;
+
         // Parse command line arguments for environment configuration
         if (args != null) {
             for (int i = 0; i < args.length; i++) {
@@ -36,8 +39,9 @@ public class Main {
                     System.out.println("[INFO] Terminal animation pauses disabled.");
                 } else if (arg.equals("--event") && i + 1 < args.length) {
                     try {
-                        double mult = Double.parseDouble(args[i + 1]);
-                        System.out.println("[INFO] Custom event demand multiplier set to: " + mult);
+                        customMultiplier = Double.parseDouble(args[i + 1]);
+                        hasCustomMultiplier = true;
+                        System.out.println("[INFO] Custom event demand multiplier set to: " + customMultiplier);
                     } catch (NumberFormatException ignored) {
                     }
                 }
@@ -46,6 +50,9 @@ public class Main {
 
         // Initialize core manager
         InventoryManager inventoryManager = new InventoryManager();
+        if (hasCustomMultiplier) {
+            inventoryManager.getDemandPredictor().setDemandMultiplier(customMultiplier);
+        }
 
         // Seed Mall of Tomorrow dataset (16 products, 4 zones, 14 days history)
         DataSeeder.seedMallData(inventoryManager);

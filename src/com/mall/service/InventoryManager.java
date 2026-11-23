@@ -203,9 +203,12 @@ public class InventoryManager {
         product.deductStock(quantity);
         product.recordSaleEntry(quantity);
 
-        // Create transaction and push onto LIFO Deque Stack
+        // Create transaction and push onto LIFO Deque Stack (capped at 20 entries)
         SaleTransaction tx = new SaleTransaction(product.getId(), product.getName(), quantity, product.getPrice());
         undoStack.push(tx); // Deque push() for undo functionality
+        while (undoStack.size() > 20) {
+            undoStack.removeLast(); // Cap undo stack at max 20 entries
+        }
 
         logActivity(String.format("Sale: %dx '%s' ($%.2f). Stock remaining: %d",
                 quantity, product.getName(), tx.getTotalAmount(), product.getStock()));
@@ -215,23 +218,46 @@ public class InventoryManager {
 
     /**
      * Undoes the most recent sale transaction using Deque (LIFO Stack).
-     * Restores stock and removes transaction from stack.
+     * Peeks first, looks up product, pops only on successful lookup,
+     * restores stock and subtracts units from today's sales.
      */
     public synchronized SaleTransaction undoLastSale() throws IllegalStateException, ProductNotFoundException {
         if (undoStack.isEmpty()) {
             throw new IllegalStateException("Undo stack is empty! No sales transactions available to revert.");
         }
 
-        SaleTransaction lastTx = undoStack.pop(); // Deque pop() retrieves most recent transaction
-        Product product = getProductById(lastTx.getProductId());
+        // Peek first: do not pop until product lookup succeeds
+        SaleTransaction lastTx = undoStack.peek();
+        Product product = getProductById(lastTx.getProductId()); // May throw ProductNotFoundException
+
+        // Only pop after product lookup has successfully resolved
+        undoStack.pop();
 
         // Restore deducted units back into inventory
         product.addStock(lastTx.getQuantity());
+
+        // Also subtract from today's sales counter
+        product.deductTodaysSales(lastTx.getQuantity());
 
         logActivity(String.format("REVERTED Sale #%d: Restored %d units of '%s'. Stock now: %d",
                 lastTx.getTransactionId(), lastTx.getQuantity(), product.getName(), product.getStock()));
 
         return lastTx;
+    }
+
+    /**
+     * Closes the day for all products across all mall zones:
+     * Appends today's sales to each product's 14-day history, resets today's counter to 0,
+     * keeps history bounded at max 14 entries, and logs the day roll event.
+     */
+    public synchronized void nextDay() {
+        int totalDayUnits = 0;
+        for (Product p : productLookup.values()) {
+            totalDayUnits += p.getTodaysSales();
+            p.closeDay();
+        }
+        logActivity(String.format("Next Day: Closed day for %d products (total %d units sold today). 14-day history updated.",
+                productLookup.size(), totalDayUnits));
     }
 
     /**
@@ -392,7 +418,21 @@ public class InventoryManager {
         return demandPredictor;
     }
 
-    public Deque<SaleTransaction> getUndoStack() {
-        return undoStack;
+    public synchronized UrgencyLevel getZoneStockHealth(ShopZone zone) {
+        if (zone == null) return UrgencyLevel.SAFE;
+        boolean hasWarning = false;
+        for (Product p : zone.getAllProducts()) {
+            int days = demandPredictor.estimateDaysUntilStockout(p);
+            if (days <= 2) {
+                return UrgencyLevel.CRITICAL;
+            } else if (days <= 5) {
+                hasWarning = true;
+            }
+        }
+        return hasWarning ? UrgencyLevel.WARNING : UrgencyLevel.SAFE;
+    }
+
+    public synchronized Deque<SaleTransaction> getUndoStack() {
+        return new ArrayDeque<SaleTransaction>(undoStack); // Defensive copy
     }
 }
