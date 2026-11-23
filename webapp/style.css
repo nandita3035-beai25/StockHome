@@ -401,19 +401,27 @@ body {
 /* SVG Interactive Shop Hover & Pulse */
 .shop-node {
   cursor: pointer;
-  transition: transform 0.25s ease;
+  transition: filter 0.25s ease;
 }
 
 .shop-node:hover {
-  transform: scale(1.015);
+  filter: drop-shadow(0 8px 20px rgba(45, 40, 35, 0.18));
 }
 
-.shop-glow-rect {
-  transition: opacity 0.3s ease;
+.shop-node:hover .shop-glow-rect {
+  opacity: 0.26 !important;
+}
+
+.visitor-figure,
+#courierVan,
+#promenadeDecorations,
+#fountainGroup {
+  pointer-events: none;
 }
 
 /* Gentle water ripple on central fountain */
 .water-ring {
+  transform-box: fill-box;
   transform-origin: center;
   animation: waterRipple 3.5s infinite ease-out;
 }

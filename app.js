@@ -17,31 +17,31 @@
     GROC: { code: 'GROC', name: 'The Rustic Harvest', category: 'Organic Essentials', color: '#4A7C59', icon: '🥖', node: 'shopNodeGroc' }
   };
 
-  // 16 seeded products with 14 days of realistic sales histories
+  // 16 seeded products with 14 days of realistic sales histories (Indian Rupee Pricing)
   const INITIAL_PRODUCTS = [
     // FOOD COURT - Botanical Cafe (Perishables)
-    { id: 'F101', name: 'Artisan Brioche Burger', price: 14.50, stock: 35, zone: 'FOOD', isPerishable: true, shelfLife: 2, icon: '🍔', history: [25, 28, 30, 27, 32, 35, 40, 38, 42, 45, 48, 50, 52, 55] },
-    { id: 'F102', name: 'Truffle Mushroom Tart', price: 18.00, stock: 80, zone: 'FOOD', isPerishable: true, shelfLife: 3, icon: '🍕', history: [10, 12, 11, 14, 12, 15, 13, 16, 14, 15, 17, 18, 19, 20] },
-    { id: 'F103', name: 'Sparkling Jasmine Tea', price: 6.00, stock: 240, zone: 'FOOD', isPerishable: true, shelfLife: 4, icon: '🧋', history: [15, 16, 15, 18, 17, 20, 19, 22, 21, 20, 24, 25, 23, 26] },
-    { id: 'F104', name: 'Cardamom Fig Mousse', price: 8.50, stock: 50, zone: 'FOOD', isPerishable: true, shelfLife: 5, icon: '🍰', history: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+    { id: 'F101', name: 'Artisan Brioche Burger', price: 299.00, stock: 35, zone: 'FOOD', isPerishable: true, shelfLife: 2, icon: '🍔', history: [25, 28, 30, 27, 32, 35, 40, 38, 42, 45, 48, 50, 52, 55] },
+    { id: 'F102', name: 'Truffle Mushroom Tart', price: 499.00, stock: 80, zone: 'FOOD', isPerishable: true, shelfLife: 3, icon: '🍕', history: [10, 12, 11, 14, 12, 15, 13, 16, 14, 15, 17, 18, 19, 20] },
+    { id: 'F103', name: 'Sparkling Jasmine Tea', price: 180.00, stock: 240, zone: 'FOOD', isPerishable: true, shelfLife: 4, icon: '🧋', history: [15, 16, 15, 18, 17, 20, 19, 22, 21, 20, 24, 25, 23, 26] },
+    { id: 'F104', name: 'Cardamom Fig Mousse', price: 220.00, stock: 50, zone: 'FOOD', isPerishable: true, shelfLife: 5, icon: '🍰', history: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
 
     // ELECTRONICS - Studio Nordics (Non-Perishables)
-    { id: 'E201', name: 'Walnut ANC Headphones', price: 149.00, stock: 20, zone: 'ELEC', isPerishable: false, warranty: 24, icon: '🎧', history: [8, 9, 10, 12, 11, 14, 15, 16, 18, 20, 22, 25, 24, 28] },
-    { id: 'E202', name: 'Minimalist E-Ink Watch', price: 199.00, stock: 110, zone: 'ELEC', isPerishable: false, warranty: 24, icon: '⌚', history: [4, 5, 4, 6, 5, 7, 6, 8, 7, 8, 9, 8, 10, 10] },
-    { id: 'E203', name: 'Brass Mechanical Keyboard', price: 120.00, stock: 35, zone: 'ELEC', isPerishable: false, warranty: 12, icon: '⌨️', history: [3, 4, 5, 4, 6, 5, 7, 6, 8, 7, 8, 9, 8, 10] },
-    { id: 'E204', name: 'Braided Audio Adapter', price: 16.00, stock: 75, zone: 'ELEC', isPerishable: false, warranty: 6, icon: '🔌', history: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+    { id: 'E201', name: 'Walnut ANC Headphones', price: 3499.00, stock: 20, zone: 'ELEC', isPerishable: false, warranty: 24, icon: '🎧', history: [8, 9, 10, 12, 11, 14, 15, 16, 18, 20, 22, 25, 24, 28] },
+    { id: 'E202', name: 'Minimalist E-Ink Watch', price: 4999.00, stock: 110, zone: 'ELEC', isPerishable: false, warranty: 24, icon: '⌚', history: [4, 5, 4, 6, 5, 7, 6, 8, 7, 8, 9, 8, 10, 10] },
+    { id: 'E203', name: 'Brass Mechanical Keyboard', price: 2899.00, stock: 35, zone: 'ELEC', isPerishable: false, warranty: 12, icon: '⌨️', history: [3, 4, 5, 4, 6, 5, 7, 6, 8, 7, 8, 9, 8, 10] },
+    { id: 'E204', name: 'Braided Audio Adapter', price: 399.00, stock: 75, zone: 'ELEC', isPerishable: false, warranty: 6, icon: '🔌', history: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
 
     // FASHION - Maison Atelier (Non-Perishables)
-    { id: 'S301', name: 'Washed Linen Overshirt', price: 78.00, stock: 15, zone: 'FASH', isPerishable: false, warranty: 6, icon: '🧥', history: [5, 6, 7, 8, 7, 9, 8, 10, 11, 12, 11, 13, 14, 15] },
-    { id: 'S302', name: 'Organic Raw Cotton Tee', price: 28.00, stock: 190, zone: 'FASH', isPerishable: false, warranty: 3, icon: '👕', history: [10, 12, 14, 15, 13, 16, 18, 17, 19, 20, 22, 21, 23, 25] },
-    { id: 'S303', name: 'Merino Wool Knit Hoodie', price: 95.00, stock: 25, zone: 'FASH', isPerishable: false, warranty: 6, icon: '🧶', history: [2, 3, 2, 4, 3, 5, 4, 5, 6, 5, 6, 7, 6, 8] },
-    { id: 'S304', name: 'Pleated Corduroy Trousers', price: 68.00, stock: 55, zone: 'FASH', isPerishable: false, warranty: 3, icon: '👖', history: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+    { id: 'S301', name: 'Washed Linen Overshirt', price: 1999.00, stock: 15, zone: 'FASH', isPerishable: false, warranty: 6, icon: '🧥', history: [5, 6, 7, 8, 7, 9, 8, 10, 11, 12, 11, 13, 14, 15] },
+    { id: 'S302', name: 'Organic Raw Cotton Tee', price: 699.00, stock: 190, zone: 'FASH', isPerishable: false, warranty: 3, icon: '👕', history: [10, 12, 14, 15, 13, 16, 18, 17, 19, 20, 22, 21, 23, 25] },
+    { id: 'S303', name: 'Merino Wool Knit Hoodie', price: 2499.00, stock: 25, zone: 'FASH', isPerishable: false, warranty: 6, icon: '🧶', history: [2, 3, 2, 4, 3, 5, 4, 5, 6, 5, 6, 7, 6, 8] },
+    { id: 'S304', name: 'Pleated Corduroy Trousers', price: 1499.00, stock: 55, zone: 'FASH', isPerishable: false, warranty: 3, icon: '👖', history: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
 
     // GROCERY - The Rustic Harvest (Perishable & Non-Perishable mix)
-    { id: 'G401', name: 'Grass-Fed A2 Farm Milk', price: 4.80, stock: 45, zone: 'GROC', isPerishable: true, shelfLife: 5, icon: '🥛', history: [30, 32, 35, 38, 40, 42, 45, 48, 50, 52, 55, 58, 60, 65] },
-    { id: 'G402', name: 'Ancient Grain Sourdough', price: 6.20, stock: 95, zone: 'GROC', isPerishable: true, shelfLife: 3, icon: '🥖', history: [12, 14, 15, 16, 18, 17, 20, 19, 22, 24, 23, 25, 27, 30] },
-    { id: 'G403', name: 'Coarse Mineral Sea Salt', price: 4.50, stock: 160, zone: 'GROC', isPerishable: false, warranty: 36, icon: '🧂', history: [3, 4, 3, 5, 4, 5, 4, 6, 5, 6, 5, 7, 6, 7] },
-    { id: 'G404', name: 'Roasted Botanical Seeds', price: 5.00, stock: 65, zone: 'GROC', isPerishable: true, shelfLife: 60, icon: '🌾', history: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }
+    { id: 'G401', name: 'Grass-Fed A2 Farm Milk', price: 75.00, stock: 45, zone: 'GROC', isPerishable: true, shelfLife: 5, icon: '🥛', history: [30, 32, 35, 38, 40, 42, 45, 48, 50, 52, 55, 58, 60, 65] },
+    { id: 'G402', name: 'Ancient Grain Sourdough', price: 140.00, stock: 95, zone: 'GROC', isPerishable: true, shelfLife: 3, icon: '🥖', history: [12, 14, 15, 16, 18, 17, 20, 19, 22, 24, 23, 25, 27, 30] },
+    { id: 'G403', name: 'Coarse Mineral Sea Salt', price: 95.00, stock: 160, zone: 'GROC', isPerishable: false, warranty: 36, icon: '🧂', history: [3, 4, 3, 5, 4, 5, 4, 6, 5, 6, 5, 7, 6, 7] },
+    { id: 'G404', name: 'Roasted Botanical Seeds', price: 120.00, stock: 65, zone: 'GROC', isPerishable: true, shelfLife: 60, icon: '🌾', history: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }
   ];
 
   const state = {
@@ -352,9 +352,11 @@
   }
 
   // Delivery Courier Van Animation along flagstones
+  let isVanInTransit = false;
   function dispatchCourierVan(targetZone) {
     const van = document.getElementById('courierVan');
-    if (!van) return;
+    if (!van || isVanInTransit) return;
+    isVanInTransit = true;
     playSound('bell');
 
     van.style.display = 'block';
@@ -372,6 +374,7 @@
         clearInterval(interval);
         setTimeout(() => {
           van.style.display = 'none';
+          isVanInTransit = false;
         }, 1200);
       }
     }, 25);
@@ -1126,6 +1129,21 @@
       const m = document.getElementById(btn.dataset.modal);
       if (m) m.classList.remove('open');
     };
+  });
+
+  // Click outside modal or press Escape to close
+  document.querySelectorAll('.modal-scrim').forEach(scrim => {
+    scrim.addEventListener('click', (e) => {
+      if (e.target === scrim) {
+        scrim.classList.remove('open');
+      }
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-scrim.open').forEach(m => m.classList.remove('open'));
+    }
   });
 
   // Record Sale Modal
