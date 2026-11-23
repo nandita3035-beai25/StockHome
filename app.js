@@ -889,7 +889,7 @@
 
           <div class="card-meter-block">
             <div class="meter-meta">
-              <span>Stock: <b>${p.stock} units</b></span>
+              <span>Stock: <b>${p.stock} units</b> (Today: <b>${p.todaysSales || 0}</b>)</span>
               <span style="color: var(--text-tertiary);">${daysText}</span>
             </div>
             <div class="bar-track">
@@ -1183,12 +1183,17 @@
 
   // Demand Multiplier Slider
   const slider = document.getElementById('sliderDemandMultiplier');
-  slider.oninput = (e) => {
-    const val = e.target.value / 100;
-    state.demandMultiplier = val;
-    document.getElementById('multiplierSliderText').textContent = `${val.toFixed(2)}x Demand`;
-    updateAllViews();
-  };
+  if (slider) {
+    slider.value = Math.round(state.demandMultiplier * 100);
+    document.getElementById('multiplierSliderText').textContent = `${state.demandMultiplier.toFixed(2)}x Dynamic Surge`;
+    slider.oninput = (e) => {
+      const val = e.target.value / 100;
+      state.demandMultiplier = val;
+      document.getElementById('multiplierSliderText').textContent = `${val.toFixed(2)}x Demand`;
+      saveStateToStorage();
+      updateAllViews();
+    };
+  }
 
   // Search & Filters
   document.getElementById('catalogSearch').oninput = renderProductCards;
@@ -1355,6 +1360,23 @@
     showToast(`Dispatched delivery van for all ${criticals.length} critical items.`);
   };
 
+  // Next Day Actions (Archive Daily Sales into 14-day history)
+  const btnNextDay = document.getElementById('btnNextDay');
+  if (btnNextDay) btnNextDay.onclick = () => nextDay();
+
+  const btnSimNextDay = document.getElementById('btnSimNextDay');
+  if (btnSimNextDay) btnSimNextDay.onclick = () => nextDay();
+
+  // Reset Data to Factory Defaults
+  const btnResetData = document.getElementById('btnResetData');
+  if (btnResetData) {
+    btnResetData.onclick = () => {
+      if (confirm('Reset all inventory, sales, and days back to initial factory demo values?')) {
+        resetStateToFactory();
+      }
+    };
+  }
+
   // Live Clock
   setInterval(() => {
     const el = document.getElementById('headerClock');
@@ -1365,6 +1387,11 @@
   }, 1000);
 
   // Initialize
+  if (state.twilightMode) {
+    document.body.classList.add('theme-twilight');
+    const themeBtn = document.getElementById('themeModeBtn');
+    if (themeBtn) themeBtn.innerHTML = '<span class="btn-icon">☀️</span> Daylight';
+  }
   initPromenadeArtwork();
   updateAllViews();
 

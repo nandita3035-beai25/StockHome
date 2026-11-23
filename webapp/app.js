@@ -44,23 +44,99 @@
     { id: 'G404', name: 'Roasted Botanical Seeds', price: 120.00, stock: 65, zone: 'GROC', isPerishable: true, shelfLife: 60, icon: '🌾', history: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }
   ];
 
-  const state = {
-    products: JSON.parse(JSON.stringify(INITIAL_PRODUCTS)),
-    undoStack: [],
-    demandMultiplier: 1.0,
-    soundEnabled: true,
-    twilightMode: false,
-    activeTab: 'tab-painted-mall',
-    activeReportSub: 'tab-top-sellers',
-    simulation: {
-      active: false,
-      intervalId: null,
-      intervalMs: 1200,
-      ticks: 0,
-      purchases: 0,
-      stockouts: 0
+  // Storage and State Management
+  const STORAGE_KEY = 'stockhome_inventory_state_v2';
+
+  function createFreshState() {
+    return {
+      products: INITIAL_PRODUCTS.map(p => ({
+        ...p,
+        history: [...p.history],
+        todaysSales: 0
+      })),
+      currentDay: 1,
+      undoStack: [],
+      demandMultiplier: 1.0,
+      soundEnabled: true,
+      twilightMode: false,
+      activeTab: 'tab-painted-mall',
+      activeReportSub: 'tab-top-sellers',
+      simulation: {
+        active: false,
+        intervalId: null,
+        intervalMs: 1200,
+        ticks: 0,
+        purchases: 0,
+        stockouts: 0
+      }
+    };
+  }
+
+  function loadPersistedState() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && Array.isArray(parsed.products) && parsed.products.length > 0) {
+          const fresh = createFreshState();
+          return {
+            ...fresh,
+            products: parsed.products.map(p => ({
+              ...p,
+              history: Array.isArray(p.history) ? p.history : [],
+              todaysSales: typeof p.todaysSales === 'number' ? p.todaysSales : 0
+            })),
+            currentDay: typeof parsed.currentDay === 'number' && parsed.currentDay >= 1 ? parsed.currentDay : 1,
+            undoStack: Array.isArray(parsed.undoStack) ? parsed.undoStack.slice(-20) : [],
+            demandMultiplier: typeof parsed.demandMultiplier === 'number' ? parsed.demandMultiplier : 1.0,
+            soundEnabled: parsed.soundEnabled !== undefined ? Boolean(parsed.soundEnabled) : true,
+            twilightMode: parsed.twilightMode !== undefined ? Boolean(parsed.twilightMode) : false,
+            activeTab: parsed.activeTab || 'tab-painted-mall',
+            activeReportSub: parsed.activeReportSub || 'tab-top-sellers'
+          };
+        }
+      }
+    } catch (e) {
+      console.warn('Unable to load from localStorage; using fresh initial state', e);
     }
-  };
+    return createFreshState();
+  }
+
+  const state = loadPersistedState();
+
+  function saveStateToStorage() {
+    try {
+      const payload = {
+        products: state.products,
+        currentDay: state.currentDay,
+        undoStack: state.undoStack.slice(-20),
+        demandMultiplier: state.demandMultiplier,
+        soundEnabled: state.soundEnabled,
+        twilightMode: state.twilightMode,
+        activeTab: state.activeTab,
+        activeReportSub: state.activeReportSub
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch (e) {
+      console.warn('Unable to save to localStorage', e);
+    }
+  }
+
+  function resetStateToFactory() {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {}
+    const fresh = createFreshState();
+    state.products = fresh.products;
+    state.currentDay = fresh.currentDay;
+    state.undoStack = [];
+    state.demandMultiplier = 1.0;
+    saveStateToStorage();
+    playSound('bell');
+    logActivity('Reset all boutique inventories and sales history to Factory Demo defaults.', 'restock');
+    showToast('Inventory reset to initial factory demo data.', 'info');
+    updateAllViews();
+  }
 
   // =========================================================================
   // 2. MATHEMATICAL FORECASTING LOGIC
@@ -73,12 +149,13 @@
   function calculateWeightedAvg(product) {
     const history = product.history;
     if (!history || history.length === 0) return 0;
-    const n = history.length;
+    const slice = history.slice(-14);
+    const n = slice.length;
     let weightedSum = 0;
     let totalWeight = 0;
     for (let i = 0; i < n; i++) {
       const weight = i + 1;
-      weightedSum += weight * history[i];
+      weightedSum += weight * slice[i];
       totalWeight += weight;
     }
     const baseWma = totalWeight > 0 ? (weightedSum / totalWeight) : 0;
@@ -398,7 +475,7 @@
     }
 
     product.stock -= quantity;
-    product.history.push(quantity);
+    product.todaysSales = (product.todaysSales || 0) + quantity;
     const totalAmount = quantity * product.price;
 
     state.undoStack.push({
@@ -408,11 +485,15 @@
       amount: totalAmount,
       timestamp: Date.now()
     });
+    if (state.undoStack.length > 20) {
+      state.undoStack.shift();
+    }
 
     playSound('chime');
     logActivity(`Checkout: ${quantity}x '${product.name}' (₹${totalAmount.toFixed(2)}). Stock left: ${product.stock}`, 'sale');
     showToast(`Purchased ${quantity}x ${product.name} (₹${totalAmount.toFixed(2)})`, 'info');
 
+    saveStateToStorage();
     updateAllViews();
     return true;
   }
@@ -426,6 +507,7 @@
     logActivity(`Restocked +${quantity} units to '${product.name}'. In stock: ${product.stock}`, 'restock');
     showToast(`Replenished +${quantity} units of ${product.name}`, 'info');
 
+    saveStateToStorage();
     updateAllViews();
     return true;
   }
@@ -436,24 +518,33 @@
       return;
     }
 
-    const tx = state.undoStack.pop();
+    const tx = state.undoStack[state.undoStack.length - 1];
     const product = state.products.find(p => p.id === tx.id);
-    if (product) {
-      product.stock += tx.quantity;
-      if (product.history.length > 14) product.history.pop();
+    if (!product) {
+      state.undoStack.pop();
+      showToast('Product associated with this transaction no longer exists.', 'warning');
+      return;
     }
+
+    state.undoStack.pop();
+    product.stock += tx.quantity;
+    product.todaysSales = Math.max(0, (product.todaysSales || 0) - tx.quantity);
 
     playSound('pop');
     logActivity(`Reverted Sale: Restored ${tx.quantity} units of '${tx.name}'`);
     showToast(`Reverted: +${tx.quantity} ${tx.name} returned to shelves`, 'info');
+    saveStateToStorage();
     updateAllViews();
   }
 
   function addProduct(newProduct) {
+    if (newProduct.todaysSales === undefined) newProduct.todaysSales = 0;
+    if (!Array.isArray(newProduct.history)) newProduct.history = new Array(14).fill(0);
     state.products.push(newProduct);
     playSound('bell');
     logActivity(`Registered new SKU: [${newProduct.id}] ${newProduct.name} in ${newProduct.zone}`);
     showToast(`Registered SKU '${newProduct.name}'`, 'info');
+    saveStateToStorage();
     updateAllViews();
   }
 
@@ -464,8 +555,29 @@
       playSound('pop');
       logActivity(`Removed SKU: [${p.id}] ${p.name}`);
       showToast(`Removed SKU ${p.name}`, 'warning');
+      saveStateToStorage();
       updateAllViews();
     }
+  }
+
+  function nextDay() {
+    const closedDay = state.currentDay || 1;
+    state.products.forEach(p => {
+      const today = p.todaysSales || 0;
+      if (!Array.isArray(p.history)) p.history = [];
+      p.history.push(today);
+      while (p.history.length > 14) {
+        p.history.shift();
+      }
+      p.todaysSales = 0;
+    });
+
+    state.currentDay = closedDay + 1;
+    saveStateToStorage();
+    playSound('bell');
+    logActivity(`🌅 Day ${closedDay} closed. Advanced to Day ${state.currentDay}. 14-day sales histories updated.`);
+    showToast(`Advanced to Day ${state.currentDay}! Daily sales archived into 14-day history.`, 'info');
+    updateAllViews();
   }
 
   // =========================================================================
@@ -515,7 +627,7 @@
 
     if (p.stock >= qty) {
       p.stock -= qty;
-      p.history.push(qty);
+      p.todaysSales = (p.todaysSales || 0) + qty;
       state.simulation.purchases++;
       document.getElementById('simValPurchases').textContent = state.simulation.purchases;
       logActivity(`Checkout: Customer purchased ${qty}x '${p.name}' (₹${(qty * p.price).toFixed(2)})`, 'sale');
@@ -525,6 +637,7 @@
       logActivity(`Turnaway: Stockout on '${p.name}'! (Requested: ${qty}, Stock: ${p.stock})`, 'stockout');
     }
 
+    saveStateToStorage();
     updateAllViews();
   }
 
@@ -555,6 +668,11 @@
                            overall === 'WARNING' ? 'Replenishment Warning' : 'Boutiques Optimal';
 
     document.getElementById('headerSurge').textContent = `Demand Rate: ${state.demandMultiplier.toFixed(2)}x Base`;
+
+    const dayBadge = document.getElementById('headerDayBadge');
+    if (dayBadge) dayBadge.textContent = `🌅 Day ${state.currentDay || 1}`;
+    const simDayLabel = document.getElementById('simDayLabel');
+    if (simDayLabel) simDayLabel.textContent = `Day ${state.currentDay || 1}`;
 
     // Bulletin ticker
     const criticals = state.products.filter(p => estimateDaysUntilStockout(p) <= 2);
@@ -771,7 +889,7 @@
 
           <div class="card-meter-block">
             <div class="meter-meta">
-              <span>Stock: <b>${p.stock} units</b></span>
+              <span>Stock: <b>${p.stock} units</b> (Today: <b>${p.todaysSales || 0}</b>)</span>
               <span style="color: var(--text-tertiary);">${daysText}</span>
             </div>
             <div class="bar-track">
@@ -1065,12 +1183,17 @@
 
   // Demand Multiplier Slider
   const slider = document.getElementById('sliderDemandMultiplier');
-  slider.oninput = (e) => {
-    const val = e.target.value / 100;
-    state.demandMultiplier = val;
-    document.getElementById('multiplierSliderText').textContent = `${val.toFixed(2)}x Demand`;
-    updateAllViews();
-  };
+  if (slider) {
+    slider.value = Math.round(state.demandMultiplier * 100);
+    document.getElementById('multiplierSliderText').textContent = `${state.demandMultiplier.toFixed(2)}x Dynamic Surge`;
+    slider.oninput = (e) => {
+      const val = e.target.value / 100;
+      state.demandMultiplier = val;
+      document.getElementById('multiplierSliderText').textContent = `${val.toFixed(2)}x Demand`;
+      saveStateToStorage();
+      updateAllViews();
+    };
+  }
 
   // Search & Filters
   document.getElementById('catalogSearch').oninput = renderProductCards;
@@ -1237,6 +1360,23 @@
     showToast(`Dispatched delivery van for all ${criticals.length} critical items.`);
   };
 
+  // Next Day Actions (Archive Daily Sales into 14-day history)
+  const btnNextDay = document.getElementById('btnNextDay');
+  if (btnNextDay) btnNextDay.onclick = () => nextDay();
+
+  const btnSimNextDay = document.getElementById('btnSimNextDay');
+  if (btnSimNextDay) btnSimNextDay.onclick = () => nextDay();
+
+  // Reset Data to Factory Defaults
+  const btnResetData = document.getElementById('btnResetData');
+  if (btnResetData) {
+    btnResetData.onclick = () => {
+      if (confirm('Reset all inventory, sales, and days back to initial factory demo values?')) {
+        resetStateToFactory();
+      }
+    };
+  }
+
   // Live Clock
   setInterval(() => {
     const el = document.getElementById('headerClock');
@@ -1247,6 +1387,11 @@
   }, 1000);
 
   // Initialize
+  if (state.twilightMode) {
+    document.body.classList.add('theme-twilight');
+    const themeBtn = document.getElementById('themeModeBtn');
+    if (themeBtn) themeBtn.innerHTML = '<span class="btn-icon">☀️</span> Daylight';
+  }
   initPromenadeArtwork();
   updateAllViews();
 

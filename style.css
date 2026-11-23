@@ -166,6 +166,32 @@ body {
   border-color: var(--terracotta-crit);
 }
 
+.pill-badge.pill-day {
+  background: rgba(85, 110, 85, 0.12);
+  color: #2e5939;
+  border-color: rgba(85, 110, 85, 0.3);
+  font-weight: 700;
+}
+
+body.theme-twilight .pill-badge.pill-day {
+  background: rgba(125, 175, 125, 0.18);
+  color: #9fe2a8;
+  border-color: rgba(125, 175, 125, 0.35);
+}
+
+.live-link-btn {
+  background: linear-gradient(135deg, rgba(82, 110, 163, 0.12), rgba(110, 82, 163, 0.12)) !important;
+  color: var(--slate-blue) !important;
+  border-color: var(--slate-blue) !important;
+  text-decoration: none;
+}
+
+.live-link-btn:hover {
+  background: var(--slate-blue) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
 .health-dot {
   width: 7px;
   height: 7px;
