@@ -28,6 +28,7 @@
 
     <div class="header-status-center">
       <div class="pill-badge pill-time" id="headerClock">12:00 PM</div>
+      <div class="pill-badge pill-day" id="headerDayBadge">🌅 Day 1</div>
       <div class="pill-badge pill-surge" id="headerSurge">Demand Rate: 1.00x Base</div>
       <div class="pill-badge pill-health safe" id="headerHealthBadge">
         <span class="health-dot"></span>
@@ -36,6 +37,15 @@
     </div>
 
     <div class="header-controls">
+      <button class="control-btn" id="btnNextDay" title="Advance to Next Day (Archive Today's Sales into 14-Day History)">
+        <span class="btn-icon">🌅</span> Next Day
+      </button>
+      <button class="control-btn" id="btnResetData" title="Reset all inventory and sales to Factory Demo">
+        <span class="btn-icon">🔄</span> Reset Demo
+      </button>
+      <a href="https://stockhome-sigma.vercel.app/" target="_blank" rel="noopener noreferrer" class="control-btn live-link-btn" title="Open Deployed Cloud Webapp on Vercel">
+        <span class="btn-icon">🚀</span> Live App
+      </a>
       <button class="control-btn" id="soundToggleBtn" title="Toggle Calm Sound Chimes">
         <span class="btn-icon">🔔</span> Chimes On
       </button>
@@ -551,6 +561,7 @@
         </div>
         <div class="sim-controls-top">
           <button class="btn-action btn-blue" id="btnToggleSim">▶ Start Gentle Simulation</button>
+          <button class="btn-action btn-green" id="btnSimNextDay">🌅 Close Day & Advance (<span id="simDayLabel">Day 1</span>)</button>
           <div class="speed-selector">
             <span>Interval:</span>
             <button class="speed-pill active" data-interval="1200">Normal (1.2s)</button>
