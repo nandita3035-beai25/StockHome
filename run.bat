@@ -22,7 +22,7 @@ if "%1"=="--console" (
     echo Starting Console Interface...
     java -cp bin com.mall.Main %*
 ) else (
-    echo Starting Graphical Interface (Swing/AWT)...
-    echo (Tip: Run 'run.bat --console' anytime to launch the terminal console version)
+    echo Starting Graphical Interface [Swing/AWT]...
+    echo [Tip: Run 'run.bat --console' anytime to launch the terminal console version]
     java -cp bin com.mall.ui.gui.GuiMain %*
 )
