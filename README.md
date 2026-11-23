@@ -1,10 +1,13 @@
 # 🌿 StockHome — Smart Inventory Demand Predictor ("Mall of Tomorrow")
 
+[![Live Cloud App](https://img.shields.io/badge/Live%20Demo-Vercel%20Deployment-success?style=flat&logo=vercel)](https://stockhome-sigma.vercel.app/)
 [![Java](https://img.shields.io/badge/Java-8%20%7C%2011%20%7C%2017%2B-blue.svg)](https://www.java.com/)
 [![SelfCheck](https://img.shields.io/badge/SelfCheck-5%2F5%20PASS-success.svg)]()
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20OOP%20%7C%20Observer%20%7C%20Mediator-orange.svg)]()
 [![Course](https://img.shields.io/badge/Chitkara-25CSE0202%20Programming%20in%20Java-purple.svg)]()
 
+> 🚀 **Live Cloud Webapp:** [https://stockhome-sigma.vercel.app/](https://stockhome-sigma.vercel.app/)
+>
 > **StockHome** is an enterprise-grade retail inventory demand forecasting system modeled around a high-traffic shopping complex (**"Mall of Tomorrow"**). It implements operational inventory science (14-day linear weighted moving average velocity, lead-time buffering, stockout horizon forecasting, and min-heap priority queue replenishment) across:
 > 1. **Core Java Backend**: Strict OOP modeling, multithreaded simulation, custom checked exceptions, and synchronized thread-safe operations.
 > 2. **Desktop Swing/AWT Graphical Frontend**: Modern Java 2D canvas with antialiased storefront rendering, animated sprite walkers, interactive charts, and observer mediation.
@@ -104,10 +107,11 @@ StockHome manages four distinct mall retail zones:
 - Thread-safe concurrency: All stock mutations in `InventoryManager` are guarded by `synchronized` monitor locks.
 - Graceful shutdown sequence using `volatile boolean running`, `workerThread.interrupt()`, and non-blocking join via helper thread.
 
-### 6. 🌐 Optional Bonus Webapp (`webapp/`)
-- Located in the `webapp/` subfolder.
-- Zero-dependency client-side demo featuring Scandinavian architectural vector aesthetics, pure SVG charts, and Web Audio.
-- Uses identical 14-day linear WMA and ROP math models.
+### 6. 🌐 Live Cloud Webapp & Bonus Demo (`webapp/`)
+- **Live Cloud Deployment**: [https://stockhome-sigma.vercel.app/](https://stockhome-sigma.vercel.app/) (Instant zero-install access hosted on Vercel).
+- **Local Access**: Open `index.html` or `open_webapp.bat` directly in the project root folder or within `webapp/`.
+- **Client-Side Persistence (`localStorage`)**: All purchases, restocks, custom registered SKUs, daily sales, and next-day progressions are automatically saved to browser `localStorage` (`stockhome_inventory_state_v2`). The state automatically persists across browser tab reloads or revisits, with a single-click **"Reset Demo"** button to restore initial factory demo defaults.
+- **Mathematical Consistency**: Shares identical 14-day linear WMA, stockout depletion horizon, lead-time buffering, and ROP formulas matching the Java core.
 
 ---
 
@@ -148,9 +152,9 @@ Runs the interactive ASCII terminal with ANSI colors, 2D floor plan rendering, a
 
 ---
 
-### Option D: Optional Bonus Webapp
-Launch the browser demo:
-- Double-click `open_webapp.bat` in the root folder, or navigate to `webapp/` and open `index.html`.
+### Option D: Live Cloud Webapp & Local Browser Demo
+- **Live Cloud App**: Open [https://stockhome-sigma.vercel.app/](https://stockhome-sigma.vercel.app/) in any web browser.
+- **Local Offline Launch**: Double-click `open_webapp.bat` or open `index.html` directly in the project root folder.
 
 ---
 
