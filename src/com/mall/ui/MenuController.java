@@ -180,7 +180,7 @@ public class MenuController {
                 if (daysLeft <= 2) colorCode = ConsoleColors.BOLD_RED;
                 else if (daysLeft <= 5) colorCode = ConsoleColors.BOLD_YELLOW;
 
-                System.out.printf("    %-6s | %-26s | $%-7.2f | %-6d | %s | %-10s\n",
+                System.out.printf("    %-6s | %-26s | ₹%-7.2f | %-6d | %s | %-10s\n",
                         p.getId(), p.getName(), p.getPrice(), p.getStock(),
                         ConsoleColors.colorize(String.format("%-12s", daysStr), colorCode),
                         typeStr);
@@ -254,7 +254,7 @@ public class MenuController {
         }
 
         String name = readStringInput("Enter Product Name: ");
-        double price = readDoubleInput("Enter Unit Retail Price ($): ", 0.01, 100000.0);
+        double price = readDoubleInput("Enter Unit Retail Price (₹): ", 0.01, 100000.0);
         int initialStock = readIntInput("Enter Initial Stock Quantity: ", 0, 5000);
         String category = manager.getZone(zoneCode).getCategory();
 
@@ -424,11 +424,11 @@ public class MenuController {
         for (Product p : deadStock) {
             double capital = p.getStock() * p.getPrice();
             totalDeadCapital += capital;
-            System.out.printf("  %-6s | %-24s | $%-11.2f | %-10d | $%-14.2f\n",
+            System.out.printf("  %-6s | %-24s | ₹%-11.2f | %-10d | ₹%-14.2f\n",
                     p.getId(), p.getName(), p.getPrice(), p.getStock(), capital);
         }
         System.out.println("  -----------------------------------------------------------------------------");
-        System.out.printf("  Total Tied-Up Capital in Dead Stock: $%.2f\n", totalDeadCapital);
+        System.out.printf("  Total Tied-Up Capital in Dead Stock: ₹%.2f\n", totalDeadCapital);
     }
 
     private void renderAlphabeticalCatalog() {

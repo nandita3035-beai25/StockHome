@@ -66,7 +66,7 @@ public class SimulationService implements Runnable {
                         // Synchronized method call on InventoryManager
                         SaleTransaction tx = inventoryManager.recordSale(targetProduct.getId(), purchaseQty);
                         successfulPurchases++;
-                        lastEvent = String.format("Customer bought %d x '%s' for $%.2f (Stock left: %d)",
+                        lastEvent = String.format("Customer bought %d x '%s' for ₹%.2f (Stock left: %d)",
                                 purchaseQty, targetProduct.getName(), tx.getTotalAmount(), targetProduct.getStock());
                     } catch (OutOfStockException oos) {
                         outOfStockIncidents++;

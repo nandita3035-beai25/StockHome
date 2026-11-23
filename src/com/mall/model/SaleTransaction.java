@@ -68,7 +68,7 @@ public class SaleTransaction {
 
     @Override
     public String toString() {
-        return String.format("Tx #%d: Sold %d x '%s' ($%.2f ea) = $%.2f at %s",
+        return String.format("Tx #%d: Sold %d x '%s' (₹%.2f ea) = ₹%.2f at %s",
                 transactionId, quantity, productName, unitPrice, totalAmount, getFormattedTimestamp());
     }
 }

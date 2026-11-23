@@ -289,7 +289,7 @@ public abstract class Product implements Predictable, Comparable<Product> {
 
     @Override
     public String toString() {
-        return String.format("[%s] %-20s | Cat: %-12s | Price: $%-6.2f | Stock: %-4d | Avg/Day: %.1f",
+        return String.format("[%s] %-20s | Cat: %-12s | Price: ₹%-6.2f | Stock: %-4d | Avg/Day: %.1f",
                 id, name, category, price, stock, averageDailySales());
     }
 }

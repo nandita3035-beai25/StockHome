@@ -179,7 +179,7 @@ public class ProductsPanel extends JPanel implements InventoryListener {
 
         // Center Table
         String[] columnNames = {
-            "ID", "Product Name", "Zone Category", "Price ($)", "Stock Units",
+            "ID", "Product Name", "Zone Category", "Price (₹)", "Stock Units",
             "Stock Level Bar", "Avg Daily", "Days Left", "Health Urgency", "Classification"
         };
 
@@ -271,7 +271,7 @@ public class ProductsPanel extends JPanel implements InventoryListener {
                 p.getId(),
                 p.getName(),
                 p.getCategory(),
-                String.format("$%.2f", p.getPrice()),
+                String.format("₹%.2f", p.getPrice()),
                 p.getStock(),
                 p.getStock(), // Visual stock bar
                 String.format("%.1f", p.averageDailySales()),
@@ -426,7 +426,7 @@ public class ProductsPanel extends JPanel implements InventoryListener {
         panel.add(idField);
         panel.add(new JLabel("Product Name:"));
         panel.add(nameField);
-        panel.add(new JLabel("Retail Price ($):"));
+        panel.add(new JLabel("Retail Price (₹):"));
         panel.add(priceField);
         panel.add(new JLabel("Initial Stock:"));
         panel.add(stockField);

@@ -122,7 +122,7 @@ public class ReportsPanel extends JPanel implements InventoryListener {
         deadStockTable = createStyledTable(deadStockModel);
         deadStockPanel.add(new JScrollPane(deadStockTable), BorderLayout.CENTER);
 
-        deadCapitalLabel = new JLabel("Total Tied-Up Capital in Dead Stock: $0.00", JLabel.RIGHT);
+        deadCapitalLabel = new JLabel("Total Tied-Up Capital in Dead Stock: ₹0.00", JLabel.RIGHT);
         deadCapitalLabel.setFont(Theme.FONT_BODY_BOLD);
         deadCapitalLabel.setForeground(Theme.RED_ALERT);
         deadCapitalLabel.setBorder(new EmptyBorder(8, 10, 8, 10));
@@ -179,8 +179,8 @@ public class ReportsPanel extends JPanel implements InventoryListener {
                 p.getName(),
                 p.getCategory(),
                 p.getTotalUnitsSold() + " units",
-                String.format("$%.2f", p.getPrice()),
-                String.format("$%.2f", rev)
+                String.format("₹%.2f", p.getPrice()),
+                String.format("₹%.2f", rev)
             });
         }
 
@@ -213,12 +213,12 @@ public class ReportsPanel extends JPanel implements InventoryListener {
                 p.getId(),
                 p.getName(),
                 p.getCategory(),
-                String.format("$%.2f", p.getPrice()),
+                String.format("₹%.2f", p.getPrice()),
                 p.getStock() + " units",
-                String.format("$%.2f", cap)
+                String.format("₹%.2f", cap)
             });
         }
-        deadCapitalLabel.setText(String.format("Total Capital Locked in Dead Stock: $%.2f", totalDeadCapital));
+        deadCapitalLabel.setText(String.format("Total Capital Locked in Dead Stock: ₹%.2f", totalDeadCapital));
 
         // 4. 2D Zone Sales Matrix
         matrixModel.setRowCount(0);

@@ -407,8 +407,8 @@
     });
 
     playSound('chime');
-    logActivity(`Checkout: ${quantity}x '${product.name}' ($${totalAmount.toFixed(2)}). Stock left: ${product.stock}`, 'sale');
-    showToast(`Purchased ${quantity}x ${product.name} ($${totalAmount.toFixed(2)})`, 'info');
+    logActivity(`Checkout: ${quantity}x '${product.name}' (₹${totalAmount.toFixed(2)}). Stock left: ${product.stock}`, 'sale');
+    showToast(`Purchased ${quantity}x ${product.name} (₹${totalAmount.toFixed(2)})`, 'info');
 
     updateAllViews();
     return true;
@@ -515,7 +515,7 @@
       p.history.push(qty);
       state.simulation.purchases++;
       document.getElementById('simValPurchases').textContent = state.simulation.purchases;
-      logActivity(`Checkout: Customer purchased ${qty}x '${p.name}' ($${(qty * p.price).toFixed(2)})`, 'sale');
+      logActivity(`Checkout: Customer purchased ${qty}x '${p.name}' (₹${(qty * p.price).toFixed(2)})`, 'sale');
     } else {
       state.simulation.stockouts++;
       document.getElementById('simValStockouts').textContent = state.simulation.stockouts;
@@ -622,7 +622,7 @@
       totalRevenue += s * p.price;
     });
     document.getElementById('metricUnitsSold').textContent = totalSold.toLocaleString();
-    document.getElementById('metricRevenueText').textContent = `$${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} historical revenue`;
+    document.getElementById('metricRevenueText').textContent = `₹${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} historical revenue`;
   }
 
   // Crisp High-DPI Bar Chart
@@ -777,7 +777,7 @@
           </div>
 
           <div class="card-action-bar">
-            <div class="price-text">$${p.price.toFixed(2)}</div>
+            <div class="price-text">₹${p.price.toFixed(2)}</div>
             <div class="mini-btn-group">
               <button class="btn-pill-small green btn-act-buy" data-id="${p.id}">Buy 1</button>
               <button class="btn-pill-small blue btn-act-restock" data-id="${p.id}">+25</button>
@@ -862,8 +862,8 @@
                 <td>${p.icon} ${p.name}</td>
                 <td>${BOUTIQUES[p.zone].name}</td>
                 <td><strong>${u}</strong></td>
-                <td>$${p.price.toFixed(2)}</td>
-                <td style="color: var(--sage-safe); font-weight: 600;">$${(u * p.price).toFixed(2)}</td>
+                <td>₹${p.price.toFixed(2)}</td>
+                <td style="color: var(--sage-safe); font-weight: 600;">₹${(u * p.price).toFixed(2)}</td>
               </tr>`;
             }).join('')}
           </tbody>
@@ -893,7 +893,7 @@
 
       area.innerHTML = `
         <div style="background: var(--terracotta-crit-bg); color: var(--terracotta-crit); padding: 12px 18px; border-radius: 8px; font-weight: 600; margin-bottom: 14px;">
-          Working Capital Tied Up in Stagnant Stock: $${totalTied.toFixed(2)}
+          Working Capital Tied Up in Stagnant Stock: ₹${totalTied.toFixed(2)}
         </div>
         <table class="soothing-table">
           <thead><tr><th>SKU</th><th>Product</th><th>Boutique</th><th>Unit Price</th><th>Unsold Units</th><th>Locked Capital</th></tr></thead>
@@ -902,9 +902,9 @@
               <td><span class="sku-pill">${p.id}</span></td>
               <td>${p.icon} ${p.name}</td>
               <td>${BOUTIQUES[p.zone].name}</td>
-              <td>$${p.price.toFixed(2)}</td>
+              <td>₹${p.price.toFixed(2)}</td>
               <td><b>${p.stock} units</b></td>
-              <td style="color: var(--terracotta-crit); font-weight: 600;">$${(p.stock * p.price).toFixed(2)}</td>
+              <td style="color: var(--terracotta-crit); font-weight: 600;">₹${(p.stock * p.price).toFixed(2)}</td>
             </tr>`).join('')}
           </tbody>
         </table>

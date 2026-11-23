@@ -210,7 +210,7 @@ public class InventoryManager {
             undoStack.removeLast(); // Cap undo stack at max 20 entries
         }
 
-        logActivity(String.format("Sale: %dx '%s' ($%.2f). Stock remaining: %d",
+        logActivity(String.format("Sale: %dx '%s' (₹%.2f). Stock remaining: %d",
                 quantity, product.getName(), tx.getTotalAmount(), product.getStock()));
 
         return tx;
