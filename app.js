@@ -667,7 +667,8 @@
     badgeText.textContent = overall === 'CRITICAL' ? 'Critical Attention Required' :
                            overall === 'WARNING' ? 'Replenishment Warning' : 'Boutiques Optimal';
 
-    document.getElementById('headerSurge').textContent = `Demand Rate: ${state.demandMultiplier.toFixed(2)}x Base`;
+    const surgeEl = document.getElementById('headerSurge');
+    if (surgeEl) surgeEl.textContent = `Demand Rate: ${state.demandMultiplier.toFixed(2)}x Base`;
 
     const dayBadge = document.getElementById('headerDayBadge');
     if (dayBadge) dayBadge.textContent = `🌅 Day ${state.currentDay || 1}`;
@@ -1202,19 +1203,25 @@
 
   // Sound Toggle
   const sndBtn = document.getElementById('soundToggleBtn');
-  sndBtn.onclick = () => {
-    state.soundEnabled = !state.soundEnabled;
-    sndBtn.innerHTML = state.soundEnabled ? '<span class="btn-icon">🔔</span> Chimes On' : '<span class="btn-icon">🔕</span> Chimes Muted';
-    showToast(state.soundEnabled ? 'Gentle chimes enabled' : 'Chimes muted');
-  };
+  if (sndBtn) {
+    sndBtn.onclick = () => {
+      state.soundEnabled = !state.soundEnabled;
+      sndBtn.innerHTML = state.soundEnabled ? '<span class="btn-icon">🔔</span>' : '<span class="btn-icon">🔕</span>';
+      sndBtn.title = state.soundEnabled ? 'Chimes On (Click to Mute)' : 'Chimes Muted (Click to Enable)';
+      showToast(state.soundEnabled ? 'Gentle chimes enabled' : 'Chimes muted');
+    };
+  }
 
   // Twilight Theme Toggle
   const themeBtn = document.getElementById('themeModeBtn');
-  themeBtn.onclick = () => {
-    state.twilightMode = !state.twilightMode;
-    document.body.classList.toggle('theme-twilight', state.twilightMode);
-    themeBtn.innerHTML = state.twilightMode ? '<span class="btn-icon">☀️</span> Daylight' : '<span class="btn-icon">🌙</span> Twilight';
-  };
+  if (themeBtn) {
+    themeBtn.onclick = () => {
+      state.twilightMode = !state.twilightMode;
+      document.body.classList.toggle('theme-twilight', state.twilightMode);
+      themeBtn.innerHTML = state.twilightMode ? '<span class="btn-icon">☀️</span>' : '<span class="btn-icon">🌙</span>';
+      themeBtn.title = state.twilightMode ? 'Switch to Daylight' : 'Switch to Twilight';
+    };
+  }
 
   // Promenade Action Buttons
   document.getElementById('btnStrollVisitor').onclick = () => {
@@ -1390,7 +1397,10 @@
   if (state.twilightMode) {
     document.body.classList.add('theme-twilight');
     const themeBtn = document.getElementById('themeModeBtn');
-    if (themeBtn) themeBtn.innerHTML = '<span class="btn-icon">☀️</span> Daylight';
+    if (themeBtn) {
+      themeBtn.innerHTML = '<span class="btn-icon">☀️</span>';
+      themeBtn.title = 'Switch to Daylight';
+    }
   }
   initPromenadeArtwork();
   updateAllViews();

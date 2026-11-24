@@ -52,18 +52,13 @@
         </svg>
       </div>
       <div class="brand-meta">
-        <div class="brand-title-wrap">
-          <h1 class="brand-title">Stock<span class="brand-title-accent">Home</span></h1>
-          <span class="brand-badge">PRO</span>
-        </div>
-        <p class="brand-subtitle">Smart Inventory & Demand Planning Promenade</p>
+        <h1 class="brand-title">Stock<span class="brand-title-accent">Home</span></h1>
+        <p class="brand-subtitle">Smart Inventory System</p>
       </div>
     </div>
 
     <div class="header-status-center">
-      <div class="pill-badge pill-time" id="headerClock">12:00 PM</div>
       <div class="pill-badge pill-day" id="headerDayBadge">🌅 Day 1</div>
-      <div class="pill-badge pill-surge" id="headerSurge">Demand Rate: 1.00x Base</div>
       <div class="pill-badge pill-health safe" id="headerHealthBadge">
         <span class="health-dot"></span>
         <span id="headerHealthText">Boutiques Optimal</span>
@@ -71,20 +66,17 @@
     </div>
 
     <div class="header-controls">
-      <button class="control-btn" id="btnNextDay" title="Advance to Next Day (Archive Today's Sales into 14-Day History)">
+      <button class="btn-header-action" id="btnNextDay" title="Advance to Next Day (Archive Today's Sales into 14-Day History)">
         <span class="btn-icon">🌅</span> Next Day
       </button>
-      <button class="control-btn" id="btnResetData" title="Reset all inventory and sales to Factory Demo">
-        <span class="btn-icon">🔄</span> Reset Demo
+      <button class="btn-icon-btn" id="soundToggleBtn" title="Toggle Sound Chimes" aria-label="Toggle Sound">
+        <span class="btn-icon">🔔</span>
       </button>
-      <a href="https://stockhome-sigma.vercel.app/" target="_blank" rel="noopener noreferrer" class="control-btn live-link-btn" title="Open Deployed Cloud Webapp on Vercel">
-        <span class="btn-icon">🚀</span> Live App
-      </a>
-      <button class="control-btn" id="soundToggleBtn" title="Toggle Calm Sound Chimes">
-        <span class="btn-icon">🔔</span> Chimes On
+      <button class="btn-icon-btn" id="themeModeBtn" title="Toggle Twilight Mode" aria-label="Toggle Theme">
+        <span class="btn-icon">🌙</span>
       </button>
-      <button class="control-btn" id="themeModeBtn" title="Toggle Soft Twilight Mode">
-        <span class="btn-icon">🌙</span> Twilight
+      <button class="btn-icon-btn" id="btnResetData" title="Reset all inventory and sales to Factory Demo" aria-label="Reset Data">
+        <span class="btn-icon">🔄</span>
       </button>
     </div>
   </header>
