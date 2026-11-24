@@ -286,40 +286,37 @@ body.theme-twilight .pill-badge.pill-day {
 .app-nav {
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border-light);
-  padding: 6px 24px;
+  padding: 8px 36px;
 }
 
 .nav-inner {
   display: flex;
   align-items: center;
-  gap: 6px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.nav-inner::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
+  justify-content: space-between;
+  gap: 8px;
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .nav-item {
+  flex: 1 1 0;
+  min-width: 0;
   font-family: 'Outfit', sans-serif;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 600;
   color: var(--text-secondary);
   background: transparent;
   border: 1px solid transparent;
-  padding: 7px 13px;
-  border-radius: 9px;
+  padding: 10px 8px;
+  border-radius: 10px;
   cursor: pointer;
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
-  flex-shrink: 0;
 }
 
 .nav-item:hover {
@@ -332,6 +329,7 @@ body.theme-twilight .pill-badge.pill-day {
   background: var(--slate-blue);
   color: #FFFFFF;
   border-color: var(--slate-blue);
+  box-shadow: 0 1px 3px rgba(69, 105, 144, 0.25);
 }
 
 .tab-chip {
