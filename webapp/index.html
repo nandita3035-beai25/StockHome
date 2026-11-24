@@ -66,6 +66,9 @@
     </div>
 
     <div class="header-controls">
+      <button class="btn-icon-btn btn-header-hamburger" id="btnHeaderHamburger" title="Open 5 Core Features Guide" aria-label="Core Features">
+        <span class="btn-icon">☰</span>
+      </button>
       <button class="btn-header-action" id="btnNextDay" title="Advance to Next Day (Archive Today's Sales into 14-Day History)">
         <span class="btn-icon">🌅</span> Next Day
       </button>
@@ -84,6 +87,11 @@
   <!-- NAVIGATION TABS -->
   <nav class="app-nav">
     <div class="nav-inner">
+      <button class="nav-hamburger-btn" id="btnHamburger" title="Open 5 Core Inventory Features Guide" aria-label="Toggle Core Features Menu">
+        <span class="hamburger-icon">☰</span>
+        <span class="hamburger-label">5 Core Features</span>
+      </button>
+      <div class="nav-divider"></div>
       <button class="nav-item active" data-tab="tab-painted-mall">
         <span class="nav-icon">🌿</span> Promenade Painting
       </button>
@@ -762,6 +770,146 @@
       </div>
     </div>
   </div>
+
+  <!-- ============================================== -->
+  <!-- 5 CORE FEATURES HAMBURGER DRAWER -->
+  <!-- ============================================== -->
+  <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
+  <aside class="features-drawer" id="featuresDrawer" aria-label="5 Core Features Guide" aria-hidden="true">
+    <div class="drawer-header">
+      <div class="drawer-header-title">
+        <span class="drawer-badge">Academic & Operations Guide</span>
+        <h3>5 Core Inventory Features</h3>
+        <p>Mathematical formulations, data structures, and live system locations.</p>
+      </div>
+      <button class="drawer-close-btn" id="btnCloseDrawer" aria-label="Close Features Drawer">&times;</button>
+    </div>
+
+    <div class="drawer-body">
+      <!-- Feature 1 -->
+      <div class="drawer-feature-card">
+        <div class="feature-card-top">
+          <span class="feature-num-badge">1</span>
+          <div class="feature-title-wrap">
+            <h4>Maintain Stock & Sales Records</h4>
+            <span class="feature-tag tag-green">Real-Time Ledger</span>
+          </div>
+        </div>
+        <p class="feature-desc">
+          Maintains real-time stock quantities across 4 boutique sectors. POS checkouts decrement stock and increment a dedicated <code>todaysSales</code> counter. Calling <strong>Next Day</strong> triggers <code>closeDay()</code>: appends today's sales into a rolling 14-day history queue (bounded at 14 days) and resets the day accumulator.
+        </p>
+        <div class="feature-formula-box">
+          <span class="formula-label">Mechanism & Bounds:</span>
+          <code>todaysSales += qty; closeDay() &rarr; max 14 entries</code>
+        </div>
+        <div class="feature-extra-note">
+          <strong>Atomic Undo:</strong> Capped 20-entry LIFO transaction stack restores both shelf stock and today's sales.
+        </div>
+        <button class="drawer-jump-btn" data-jump="tab-catalog">
+          <span>Go to Boutique Shelves</span> &rarr;
+        </button>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="drawer-feature-card">
+        <div class="feature-card-top">
+          <span class="feature-num-badge">2</span>
+          <div class="feature-title-wrap">
+            <h4>Calculate Average Daily Sales (ADS)</h4>
+            <span class="feature-tag tag-blue">14-Day Linear WMA</span>
+          </div>
+        </div>
+        <p class="feature-desc">
+          Predicts velocity using a 14-day Linear Weighted Moving Average. Day 1 (oldest) has weight 1; Day 14 (yesterday) has weight 14. Total weights sum to 105. Recent sales carry 14&times; more statistical weight than older days.
+        </p>
+        <div class="feature-formula-box">
+          <span class="formula-label">Formula:</span>
+          <code>ADS = &Sigma;(i &times; Sales[i]) / 105 &nbsp;(where i = 1..14)</code>
+        </div>
+        <button class="drawer-jump-btn" data-jump="tab-overview">
+          <span>Go to Overview & Charts</span> &rarr;
+        </button>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="drawer-feature-card">
+        <div class="feature-card-top">
+          <span class="feature-num-badge">3</span>
+          <div class="feature-title-wrap">
+            <h4>Estimate Days Until Stock Runs Out</h4>
+            <span class="feature-tag tag-purple">Velocity & Surge</span>
+          </div>
+        </div>
+        <p class="feature-desc">
+          Forecasts the exhaustion timeline before shelves reach zero. Factors in the dynamic footfall multiplier (1.0&times; to 2.5&times; for weekend and holiday rushes). Safe against zero-sales products (marked infinite safe).
+        </p>
+        <div class="feature-formula-box">
+          <span class="formula-label">Formula:</span>
+          <code>Days Left = Current Stock / (ADS &times; Multiplier)</code>
+        </div>
+        <button class="drawer-jump-btn" data-jump="tab-analytics">
+          <span>Go to Demand Analytics</span> &rarr;
+        </button>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="drawer-feature-card">
+        <div class="feature-card-top">
+          <span class="feature-num-badge">4</span>
+          <div class="feature-title-wrap">
+            <h4>Generate Reorder Suggestions</h4>
+            <span class="feature-tag tag-amber">ROP & Safety Buffer</span>
+          </div>
+        </div>
+        <p class="feature-desc">
+          Triggers automatic replenishment when shelf stock breaches the Reorder Point (ROP). Computes the economic restock quantity to cover supplier lead time delay plus an additional 7-day safety buffer.
+        </p>
+        <div class="feature-formula-box">
+          <span class="formula-label">Formulas:</span>
+          <code>ROP = (ADS &times; Lead Time) + Safety Stock</code><br>
+          <code>Suggested Qty = (Lead Time + 7) &times; ADS</code>
+        </div>
+        <button class="drawer-jump-btn" data-jump="tab-reorder">
+          <span>Go to Smart Reorder Queue</span> &rarr;
+        </button>
+      </div>
+
+      <!-- Feature 5 -->
+      <div class="drawer-feature-card">
+        <div class="feature-card-top">
+          <span class="feature-num-badge">5</span>
+          <div class="feature-title-wrap">
+            <h4>Rank Products by Urgency</h4>
+            <span class="feature-tag tag-red">PriorityQueue Min-Heap</span>
+          </div>
+        </div>
+        <p class="feature-desc">
+          Uses a Java <code>PriorityQueue</code> (Min-Heap) ordered by fewest days until stockout. Immediately segments all inventory items into 3 operational risk tiers:
+        </p>
+        <div class="drawer-tiers-list">
+          <div class="tier-pill tier-crit">🔴 <strong>CRITICAL</strong>: &le; 2 days of stock remaining</div>
+          <div class="tier-pill tier-warn">🟡 <strong>WARNING</strong>: &le; 5 days until reorder point</div>
+          <div class="tier-pill tier-safe">🟢 <strong>SAFE</strong>: &gt; 5 days healthy buffer</div>
+        </div>
+        <button class="drawer-jump-btn" data-jump="tab-reorder">
+          <span>Go to Smart Reorder Queue</span> &rarr;
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Tab Switcher inside Drawer -->
+    <div class="drawer-footer-nav">
+      <h4>Direct Screen Navigation</h4>
+      <div class="drawer-nav-chips">
+        <button class="drawer-nav-pill active" data-tab="tab-painted-mall">🌿 Promenade Painting</button>
+        <button class="drawer-nav-pill" data-tab="tab-overview">📊 Overview & Charts</button>
+        <button class="drawer-nav-pill" data-tab="tab-catalog">🛍️ Boutique Shelves</button>
+        <button class="drawer-nav-pill" data-tab="tab-reorder">⏳ Reorder Queue</button>
+        <button class="drawer-nav-pill" data-tab="tab-analytics">📈 Demand Analytics</button>
+        <button class="drawer-nav-pill" data-tab="tab-simulation">🕊️ Gentle Simulation</button>
+      </div>
+    </div>
+  </aside>
 
   <!-- Toast Container -->
   <div class="toast-stack" id="toastStack"></div>
