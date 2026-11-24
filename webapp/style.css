@@ -99,34 +99,81 @@ body {
 }
 
 .brand-symbol {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-sm);
-  background: var(--slate-blue-light);
-  color: var(--slate-blue);
-  border: 1.5px solid var(--slate-blue);
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(82, 110, 163, 0.1) 0%, rgba(16, 185, 129, 0.12) 100%);
+  border: 1.5px solid rgba(82, 110, 163, 0.28);
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 14px rgba(82, 110, 163, 0.15);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.brand-symbol:hover {
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 6px 18px rgba(82, 110, 163, 0.25);
+  border-color: var(--slate-blue);
+}
+
+.brand-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .brand-title {
   font-family: 'Outfit', sans-serif;
   font-size: 24px;
   font-weight: 700;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.4px;
   color: var(--text-primary);
+  line-height: 1.2;
 }
 
-.brand-title span {
+.brand-title-accent {
+  background: linear-gradient(135deg, var(--slate-blue) 0%, #10B981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.brand-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--slate-blue-light);
   color: var(--slate-blue);
-  font-weight: 500;
+  border: 1px solid rgba(82, 110, 163, 0.3);
+  text-transform: uppercase;
 }
 
 .brand-subtitle {
   font-size: 12px;
   color: var(--text-secondary);
   font-weight: 500;
+}
+
+body.theme-twilight .brand-symbol {
+  background: linear-gradient(135deg, rgba(142, 168, 219, 0.15) 0%, rgba(52, 211, 153, 0.15) 100%);
+  border-color: rgba(142, 168, 219, 0.4);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+body.theme-twilight .brand-badge {
+  background: rgba(142, 168, 219, 0.2);
+  color: #B4C6EE;
+  border-color: rgba(142, 168, 219, 0.4);
 }
 
 .header-status-center {
@@ -1267,10 +1314,359 @@ body.theme-twilight .pill-badge.pill-day {
 }
 
 /* =========================================================================
-   RESPONSIVE
+   COMPREHENSIVE RESPONSIVE DESIGN (DESKTOP, TABLET, MOBILE)
    ========================================================================= */
 
-@media (max-width: 960px) {
-  .app-header { flex-direction: column; align-items: flex-start; }
-  .charts-row, .sim-split-grid { grid-template-columns: 1fr; }
+/* Tablets & Small Laptops (<= 1100px) */
+@media (max-width: 1100px) {
+  .app-header {
+    padding: 12px 24px;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  
+  .header-status-center {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+  
+  .header-controls {
+    order: 2;
+    margin-left: auto;
+  }
+  
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .sim-split-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .promenade-footer-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+/* Medium Tablets & Large Phones (<= 840px) */
+@media (max-width: 840px) {
+  .app-header {
+    padding: 12px 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .brand-block {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .header-controls {
+    order: unset;
+    margin-left: 0;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    justify-content: flex-start;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .header-controls::-webkit-scrollbar {
+    display: none;
+  }
+
+  .header-status-center {
+    order: unset;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .header-status-center::-webkit-scrollbar {
+    display: none;
+  }
+
+  .control-btn {
+    flex-shrink: 0;
+    padding: 7px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .pill-badge {
+    flex-shrink: 0;
+    padding: 5px 11px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .app-nav {
+    padding: 6px 14px;
+  }
+
+  .nav-inner {
+    gap: 6px;
+    padding: 2px 0;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-inner::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-item {
+    padding: 8px 14px;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .app-viewport {
+    padding: 16px 14px 64px 14px;
+  }
+
+  .view-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .title-wrap h2 {
+    font-size: 22px;
+  }
+
+  .header-actions-bar {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .header-actions-bar .btn-action {
+    flex: 1 1 calc(50% - 6px);
+    justify-content: center;
+    padding: 10px 14px;
+    font-size: 13px;
+    min-width: 130px;
+  }
+
+  .painting-frame {
+    border-radius: 12px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .kpi-card-soothing {
+    padding: 16px;
+  }
+
+  .kpi-number {
+    font-size: 28px;
+  }
+
+  .chart-panel {
+    padding: 16px;
+  }
+
+  .panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .filter-strip {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .search-box,
+  #catalogSearch {
+    width: 100%;
+  }
+
+  .select-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .soothing-select {
+    width: 100%;
+  }
+
+  .product-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+  }
+
+  .table-card {
+    border-radius: 10px;
+  }
+
+  .soothing-table {
+    min-width: 620px;
+  }
+
+  .analytics-subnav {
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .analytics-subnav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .subnav-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  .multiplier-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 18px 16px;
+  }
+
+  .multiplier-slider-side {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .sim-controls-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .sim-controls-top .btn-action {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .speed-selector {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .sim-kpi-row {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+  }
+
+  .modal-window {
+    width: calc(100vw - 24px);
+    max-width: 480px;
+    margin: 12px;
+    border-radius: 14px;
+  }
+
+  .modal-window.wide {
+    width: calc(100vw - 24px);
+    max-width: 740px;
+  }
+
+  .modal-top {
+    padding: 14px 18px;
+  }
+
+  .modal-content {
+    padding: 16px 18px;
+    max-height: calc(75vh - 100px);
+  }
+
+  .modal-bottom {
+    padding: 12px 18px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .modal-bottom .btn-action {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .app-ticker {
+    padding: 8px 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .ticker-audit {
+    display: none;
+  }
+}
+
+/* Small Smart Phones (<= 520px) */
+@media (max-width: 520px) {
+  .brand-title {
+    font-size: 20px;
+  }
+
+  .brand-symbol {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand-subtitle {
+    display: none;
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header-actions-bar .btn-action {
+    flex: 1 1 100%;
+  }
+
+  .card-action-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .mini-btn-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .mini-btn-group .btn-pill-small {
+    flex: 1;
+    text-align: center;
+    padding: 8px 6px;
+  }
+
+  .input-duo {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .toast-stack {
+    left: 12px;
+    right: 12px;
+    bottom: 50px;
+  }
+
+  .toast-msg {
+    width: 100%;
+    font-size: 12px;
+    padding: 9px 14px;
+  }
 }
