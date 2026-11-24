@@ -59,7 +59,7 @@
       demandMultiplier: 1.0,
       soundEnabled: true,
       twilightMode: false,
-      activeTab: 'tab-painted-mall',
+      activeTab: 'tab-overview',
       activeReportSub: 'tab-top-sellers',
       simulation: {
         active: false,
@@ -91,7 +91,7 @@
             demandMultiplier: typeof parsed.demandMultiplier === 'number' ? parsed.demandMultiplier : 1.0,
             soundEnabled: parsed.soundEnabled !== undefined ? Boolean(parsed.soundEnabled) : true,
             twilightMode: parsed.twilightMode !== undefined ? Boolean(parsed.twilightMode) : false,
-            activeTab: parsed.activeTab || 'tab-painted-mall',
+            activeTab: parsed.activeTab || 'tab-overview',
             activeReportSub: parsed.activeReportSub || 'tab-top-sellers'
           };
         }
@@ -1224,22 +1224,31 @@
   }
 
   // Promenade Action Buttons
-  document.getElementById('btnStrollVisitor').onclick = () => {
-    playSound('pop');
-    if (visitorsLayer) {
-      const v = new StrollingVisitor(visitors.length);
-      visitors.push(v);
-      visitorsLayer.appendChild(v.element);
-      showToast('A new visitor has entered the promenade.');
-    }
-  };
+  const btnStroll = document.getElementById('btnStrollVisitor');
+  if (btnStroll) {
+    btnStroll.onclick = () => {
+      playSound('pop');
+      if (visitorsLayer) {
+        const v = new StrollingVisitor(visitors.length);
+        visitors.push(v);
+        visitorsLayer.appendChild(v.element);
+        showToast('A new visitor has entered the promenade.');
+      }
+    };
+  }
 
-  document.getElementById('btnRestockCourier').onclick = () => {
-    dispatchCourierVan('FOOD');
-  };
+  const btnCourier = document.getElementById('btnRestockCourier');
+  if (btnCourier) {
+    btnCourier.onclick = () => {
+      dispatchCourierVan('FOOD');
+    };
+  }
 
   // Simulation Toggle
-  document.getElementById('btnToggleSim').onclick = toggleSimulation;
+  const btnSim = document.getElementById('btnToggleSim');
+  if (btnSim) {
+    btnSim.onclick = toggleSimulation;
+  }
 
   document.querySelectorAll('.speed-pill').forEach(pill => {
     pill.onclick = () => {
