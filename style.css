@@ -78,13 +78,13 @@ body {
 }
 
 /* =========================================================================
-   TOP HEADER
+   TOP HEADER (CLEAN & UNCLUTTERED)
    ========================================================================= */
 
 .app-header {
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border-light);
-  padding: 14px 36px;
+  padding: 12px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -95,26 +95,26 @@ body {
 .brand-block {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .brand-symbol {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
   background: linear-gradient(135deg, rgba(82, 110, 163, 0.1) 0%, rgba(16, 185, 129, 0.12) 100%);
   border: 1.5px solid rgba(82, 110, 163, 0.28);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 14px rgba(82, 110, 163, 0.15);
+  box-shadow: 0 3px 10px rgba(82, 110, 163, 0.12);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
 }
 
 .brand-symbol:hover {
-  transform: translateY(-1px) scale(1.05);
-  box-shadow: 0 6px 18px rgba(82, 110, 163, 0.25);
+  transform: translateY(-1px) scale(1.04);
+  box-shadow: 0 5px 14px rgba(82, 110, 163, 0.2);
   border-color: var(--slate-blue);
 }
 
@@ -123,19 +123,13 @@ body {
   flex-direction: column;
 }
 
-.brand-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .brand-title {
   font-family: 'Outfit', sans-serif;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.4px;
   color: var(--text-primary);
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .brand-title-accent {
@@ -145,23 +139,12 @@ body {
   font-weight: 700;
 }
 
-.brand-badge {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.6px;
-  padding: 2px 7px;
-  border-radius: 4px;
-  background: var(--slate-blue-light);
-  color: var(--slate-blue);
-  border: 1px solid rgba(82, 110, 163, 0.3);
-  text-transform: uppercase;
-}
-
 .brand-subtitle {
-  font-size: 12px;
-  color: var(--text-secondary);
+  font-size: 11px;
+  color: var(--text-tertiary);
   font-weight: 500;
+  letter-spacing: 0.2px;
+  margin-top: 1px;
 }
 
 body.theme-twilight .brand-symbol {
@@ -170,24 +153,18 @@ body.theme-twilight .brand-symbol {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
-body.theme-twilight .brand-badge {
-  background: rgba(142, 168, 219, 0.2);
-  color: #B4C6EE;
-  border-color: rgba(142, 168, 219, 0.4);
-}
-
 .header-status-center {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .pill-badge {
   font-size: 12px;
   font-weight: 600;
-  padding: 6px 14px;
+  padding: 5px 13px;
   border-radius: 20px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
   border: 1px solid var(--border-light);
@@ -226,19 +203,6 @@ body.theme-twilight .pill-badge.pill-day {
   border-color: rgba(125, 175, 125, 0.35);
 }
 
-.live-link-btn {
-  background: linear-gradient(135deg, rgba(82, 110, 163, 0.12), rgba(110, 82, 163, 0.12)) !important;
-  color: var(--slate-blue) !important;
-  border-color: var(--slate-blue) !important;
-  text-decoration: none;
-}
-
-.live-link-btn:hover {
-  background: var(--slate-blue) !important;
-  color: #ffffff !important;
-  transform: translateY(-1px);
-}
-
 .health-dot {
   width: 7px;
   height: 7px;
@@ -249,15 +213,57 @@ body.theme-twilight .pill-badge.pill-day {
 
 .header-controls {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
 }
 
-.control-btn {
-  font-family: inherit;
+.btn-header-action {
+  font-family: 'Outfit', sans-serif;
   font-size: 13px;
   font-weight: 600;
-  padding: 8px 14px;
-  border-radius: var(--radius-sm);
+  padding: 7px 15px;
+  border-radius: 20px;
+  border: 1px solid rgba(82, 110, 163, 0.35);
+  background: linear-gradient(135deg, rgba(82, 110, 163, 0.12), rgba(16, 185, 129, 0.12));
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.btn-header-action:hover {
+  background: var(--slate-blue);
+  color: #ffffff;
+  border-color: var(--slate-blue);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(82, 110, 163, 0.25);
+}
+
+.btn-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border-medium);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.btn-icon-btn:hover {
+  background: var(--bg-surface-subtle);
+  border-color: var(--text-secondary);
+  transform: translateY(-1px);
+}
   border: 1px solid var(--border-medium);
   background: var(--bg-surface);
   color: var(--text-primary);
@@ -1356,52 +1362,55 @@ body.theme-twilight .pill-badge.pill-day {
 /* Medium Tablets & Large Phones (<= 840px) */
 @media (max-width: 840px) {
   .app-header {
-    padding: 12px 16px;
-    flex-direction: column;
-    align-items: stretch;
+    padding: 10px 18px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
     gap: 12px;
   }
 
   .brand-block {
-    width: 100%;
-    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .brand-symbol {
+    width: 38px;
+    height: 38px;
+  }
+
+  .brand-title {
+    font-size: 20px;
   }
 
   .header-controls {
-    order: unset;
-    margin-left: 0;
-    width: 100%;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    justify-content: flex-start;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
-  .header-controls::-webkit-scrollbar {
-    display: none;
+
+  .btn-header-action {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .btn-icon-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
   }
 
   .header-status-center {
-    order: unset;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-  .header-status-center::-webkit-scrollbar {
-    display: none;
-  }
-
-  .control-btn {
-    flex-shrink: 0;
-    padding: 7px 12px;
-    font-size: 12px;
-    white-space: nowrap;
+    width: 100%;
+    order: 3;
+    justify-content: flex-start;
+    gap: 8px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border-light);
   }
 
   .pill-badge {
-    flex-shrink: 0;
-    padding: 5px 11px;
+    padding: 4px 10px;
     font-size: 11px;
-    white-space: nowrap;
   }
 
   .app-nav {
@@ -1612,16 +1621,27 @@ body.theme-twilight .pill-badge.pill-day {
 /* Small Smart Phones (<= 520px) */
 @media (max-width: 520px) {
   .brand-title {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .brand-symbol {
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
   }
 
   .brand-subtitle {
     display: none;
+  }
+
+  .btn-header-action {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .btn-icon-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
   }
 
   .kpi-grid {
