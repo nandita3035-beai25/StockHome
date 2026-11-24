@@ -1163,13 +1163,9 @@
     playSound('pop');
     document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-screen').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.drawer-nav-pill').forEach(p => p.classList.remove('active'));
 
     const navBtn = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
     if (navBtn) navBtn.classList.add('active');
-
-    const drawerPill = document.querySelector(`.drawer-nav-pill[data-tab="${tabId}"]`);
-    if (drawerPill) drawerPill.classList.add('active');
 
     const target = document.getElementById(tabId);
     if (target) target.classList.add('active');
@@ -1337,17 +1333,6 @@
   document.querySelectorAll('.drawer-jump-btn').forEach(btn => {
     btn.onclick = () => {
       const targetTab = btn.dataset.jump;
-      if (targetTab) {
-        switchToTab(targetTab);
-        closeFeaturesDrawer();
-      }
-    };
-  });
-
-  // Drawer quick nav chips
-  document.querySelectorAll('.drawer-nav-pill').forEach(pill => {
-    pill.onclick = () => {
-      const targetTab = pill.dataset.tab;
       if (targetTab) {
         switchToTab(targetTab);
         closeFeaturesDrawer();
