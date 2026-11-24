@@ -84,18 +84,24 @@
   <!-- NAVIGATION TABS -->
   <nav class="app-nav">
     <div class="nav-inner">
-      <button class="nav-item active" data-tab="tab-overview">
-        <span class="nav-icon">📊</span> Demand Prediction & Horizons
+      <button class="nav-item active" data-tab="tab-painted-mall">
+        <span class="nav-icon">🌿</span> Promenade Painting
+      </button>
+      <button class="nav-item" data-tab="tab-overview">
+        <span class="nav-icon">📊</span> Overview & Charts
       </button>
       <button class="nav-item" data-tab="tab-catalog">
-        <span class="nav-icon">🛍️</span> Stock & Daily Sales Records
+        <span class="nav-icon">🛍️</span> Boutique Shelves
       </button>
       <button class="nav-item" data-tab="tab-reorder">
         <span class="nav-icon">⏳</span> Smart Reorder Queue
         <span class="tab-chip" id="chipReorderCount">0</span>
       </button>
-      <button class="nav-item" data-tab="tab-painted-mall">
-        <span class="nav-icon">🌿</span> 2D Promenade & Simulation
+      <button class="nav-item" data-tab="tab-analytics">
+        <span class="nav-icon">📈</span> Demand Analytics & Matrix
+      </button>
+      <button class="nav-item" data-tab="tab-simulation">
+        <span class="nav-icon">🕊️</span> Gentle Simulation
         <span class="active-dot" id="simLiveDot"></span>
       </button>
     </div>
@@ -104,333 +110,17 @@
   <!-- MAIN VIEWPORT -->
   <main class="app-viewport">
 
-    <!-- SCREEN 1: DEMAND PREDICTION & VELOCITY HORIZONS (FEATURES 2 & 3) -->
-    <section id="tab-overview" class="tab-screen active">
+    <!-- SCREEN 1: 2D PAINTED MALL PROMENADE -->
+    <section id="tab-painted-mall" class="tab-screen active">
       <div class="view-header">
         <div class="title-wrap">
-          <span class="category-badge">Operations Research & Forecasting</span>
-          <h2>Demand Prediction & Stockout Horizons</h2>
-          <p>Real-time analytics engine powered by 14-day weighted moving averages and dynamic surge scenarios.</p>
-        </div>
-      </div>
-
-      <!-- FEATURE EXPLAINER / VIVA PRESENTATION GUIDE -->
-      <div class="feature-guide-card">
-        <div class="guide-header">
-          <span class="guide-badge">Viva / Interview Walkthrough</span>
-          <h3>Feature 2 & 3: 14-Day Linear WMA & Days-Until-Stockout</h3>
-        </div>
-        <div class="guide-grid">
-          <div class="guide-item">
-            <span class="guide-step-num">1</span>
-            <div class="guide-item-content">
-              <h4>Average Daily Sales (ADS)</h4>
-              <p>Uses a 14-day linear Weighted Moving Average giving weights 1 to 14 (yesterday has 14x more weight than day 14).</p>
-              <span class="guide-code">ADS = &Sigma;(i &times; Sales[i]) / 105</span>
-            </div>
-          </div>
-          <div class="guide-item">
-            <span class="guide-step-num">2</span>
-            <div class="guide-item-content">
-              <h4>Dynamic Surge Multiplier</h4>
-              <p>Adjusts baseline demand for weekend or festival footfall surges (1.0x to 2.5x) across all calculations.</p>
-              <span class="guide-code">Effective Demand = ADS &times; Multiplier</span>
-            </div>
-          </div>
-          <div class="guide-item">
-            <span class="guide-step-num">3</span>
-            <div class="guide-item-content">
-              <h4>Stockout Horizon Estimation</h4>
-              <p>Predicts exact days remaining before shelves run dry. If effective demand is 0, days is marked as infinite safe.</p>
-              <span class="guide-code">Days Left = Current Stock / Effective Demand</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Multiplier Card -->
-      <div class="multiplier-card">
-        <div class="multiplier-info-side">
-          <span class="category-badge">Dynamic Scenario Simulator</span>
-          <h3>Weekend & Festival Surge Multiplier</h3>
-          <p>Adjust the slider to simulate holiday rushes (1.0x to 2.5x). Demand velocities and stockout days recalculate across the entire platform in real time.</p>
-        </div>
-        <div class="multiplier-slider-side">
-          <div class="slider-display" id="multiplierSliderText">1.00x Base Footfall</div>
-          <input type="range" id="sliderDemandMultiplier" min="100" max="250" value="100" step="5">
-          <div class="slider-ticks">
-            <span>1.0x Weekday</span>
-            <span>1.5x Weekend</span>
-            <span>2.0x Holiday</span>
-            <span>2.5x Festival</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- KPI Summary Cards -->
-      <div class="kpi-grid">
-        <div class="kpi-card-soothing">
-          <div class="kpi-tag-label">TOTAL BOUTIQUE SKUs</div>
-          <div class="kpi-number" id="metricTotalSkus">16</div>
-          <div class="kpi-subtext">Active items in 4 retail sectors</div>
-        </div>
-        <div class="kpi-card-soothing alert-red">
-          <div class="kpi-tag-label">CRITICAL ATTENTION</div>
-          <div class="kpi-number" id="metricCriticalCount">4</div>
-          <div class="kpi-subtext">&le; 2 days of inventory remaining</div>
-        </div>
-        <div class="kpi-card-soothing alert-yellow">
-          <div class="kpi-tag-label">WARNING THRESHOLD</div>
-          <div class="kpi-number" id="metricWarningCount">4</div>
-          <div class="kpi-subtext">&le; 5 days until reorder point</div>
-        </div>
-        <div class="kpi-card-soothing alert-green">
-          <div class="kpi-tag-label">GROSS UNITS SOLD</div>
-          <div class="kpi-number" id="metricUnitsSold">2,902</div>
-          <div class="kpi-subtext" id="metricRevenueText">₹38,410.20 historical revenue</div>
-        </div>
-      </div>
-
-      <!-- Charts Layout -->
-      <div class="charts-row">
-        <!-- Top Sellers Bar Chart -->
-        <div class="chart-panel">
-          <div class="panel-header">
-            <div>
-              <h3>Top Selling Items by Volume</h3>
-              <p class="panel-desc">Highest overall unit consumption across 14 tracked days</p>
-            </div>
-            <span class="panel-chip">Historical Top 5</span>
-          </div>
-          <div class="chart-body" id="topSellersBarsWrapper">
-            <!-- Dynamically populated with clean SVG bar charts -->
-          </div>
-        </div>
-
-        <!-- Stockout Horizon Indicators -->
-        <div class="chart-panel">
-          <div class="panel-header">
-            <div>
-              <h3>Stockout Exhaustion Timelines</h3>
-              <p class="panel-desc">Estimated days before current stock reaches zero</p>
-            </div>
-            <span class="panel-chip">Consumption Velocity</span>
-          </div>
-          <div class="chart-body" id="stockoutHorizonWrapper">
-            <!-- Clean timeline gauges -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Analytics Sub-Tabs -->
-
-      <div class="analytics-subnav">
-        <button class="subnav-btn active" data-sub="tab-top-sellers">🏆 Top Sellers (Volume)</button>
-        <button class="subnav-btn" data-sub="tab-slow-movers">🐢 Slow Movers (Velocity)</button>
-        <button class="subnav-btn" data-sub="tab-dead-stock">💀 Dead Stock (Tied Capital)</button>
-        <button class="subnav-btn" data-sub="tab-matrix">🧮 2D Sector Matrix (14-Day)</button>
-      </div>
-
-      <div class="table-card" id="analyticsTableArea">
-        <!-- Dynamically rendered -->
-      </div>
-
-      <!-- 14-Day Sales Matrix Curve -->
-
-      <div class="chart-panel full-span">
-        <div class="panel-header">
-          <div>
-            <h3>14-Day Mall-Wide Aggregated Footfall & Sales Trend</h3>
-            <p class="panel-desc">Calculated via multi-dimensional array matrix aggregation across all 4 sectors</p>
-          </div>
-          <span class="panel-chip">Zone Matrix Sum</span>
-        </div>
-        <div class="chart-body" id="salesTrendCurveContainer">
-          <!-- Responsive vector line curve -->
-        </div>
-      </div>
-    </section>
-
-    <!-- SCREEN 2: BOUTIQUE SHELVES (CATALOG & CRUD) (FEATURE 1) -->
-    <section id="tab-catalog" class="tab-screen">
-      <div class="view-header">
-        <div class="title-wrap">
-          <span class="category-badge">Real-Time Inventory Ledger</span>
-          <h2>Stock & Daily Sales Records</h2>
-          <p>Maintain live product quantities, process POS purchases, replenish shelves, and close daily sales cycles.</p>
+          <span class="category-badge">Hand-Crafted 2D Architectural View</span>
+          <h2>The Garden Promenade Boutiques</h2>
+          <p>An illustrated bird's-eye view of your 4 retail shops. Inspect boutique shelves, monitor live health glows, or dispatch replenishment couriers.</p>
         </div>
         <div class="header-actions-bar">
-          <button class="btn-action btn-green" id="btnOpenSaleModal">💰 Record Sale</button>
-          <button class="btn-action btn-blue" id="btnOpenRestockModal">📦 Restock</button>
-          <button class="btn-action btn-outline" id="btnUndoTransaction">↩️ Undo Sale</button>
-          <button class="btn-action btn-accent" id="btnOpenAddSkuModal">✨ Add SKU</button>
-        </div>
-      </div>
-
-      <!-- FEATURE EXPLAINER / VIVA PRESENTATION GUIDE -->
-      <div class="feature-guide-card accent-green">
-        <div class="guide-header">
-          <span class="guide-badge">Viva / Interview Walkthrough</span>
-          <h3>Feature 1: Stock Ledger, Today's Sales Counter & Bounded History</h3>
-        </div>
-        <div class="guide-grid">
-          <div class="guide-item">
-            <span class="guide-step-num">1</span>
-            <div class="guide-item-content">
-              <h4>Real-Time Stock Mutation</h4>
-              <p>Purchases deduct from inventory; restocks add units. Invalid operations throw custom exceptions (e.g., <code>InsufficientStockException</code>).</p>
-              <span class="guide-code">Stock -= qty; todaysSales += qty</span>
-            </div>
-          </div>
-          <div class="guide-item">
-            <span class="guide-step-num">2</span>
-            <div class="guide-item-content">
-              <h4>Daily Cycle & Bounded 14-Day History</h4>
-              <p>Active sales accrue in <code>todaysSales</code>. Clicking <strong>Next Day</strong> triggers <code>closeDay()</code>: appends to history, resets to 0, caps at 14 days.</p>
-              <span class="guide-code">history.append(todays); max 14 entries</span>
-            </div>
-          </div>
-          <div class="guide-item">
-            <span class="guide-step-num">3</span>
-            <div class="guide-item-content">
-              <h4>Atomic LIFO Undo Stack</h4>
-              <p>Every checkout pushes a transaction onto a 20-entry capped stack. Undo restores both shelf stock and <code>todaysSales</code> atomically.</p>
-              <span class="guide-code">Stack&lt;SaleTransaction&gt; (Cap: 20)</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Filters Row -->
-      <div class="filter-strip">
-        <div class="search-box">
-          <span class="search-sym">🔍</span>
-          <input type="text" id="catalogSearch" placeholder="Search by name, SKU ID, or category...">
-        </div>
-        <div class="select-group">
-          <select id="selectZoneFilter" class="soothing-select">
-            <option value="ALL">All Sectors (Entire Promenade)</option>
-            <option value="FOOD">Food Court — Botanical Cafe</option>
-            <option value="ELEC">Electronics — Studio Nordics</option>
-            <option value="FASH">Fashion — Maison Atelier</option>
-            <option value="GROC">Grocery — Rustic Harvest</option>
-          </select>
-          <select id="selectHealthFilter" class="soothing-select">
-            <option value="ALL">All Health Tiers</option>
-            <option value="CRITICAL">🔴 Critical Stock (&le; 2 Days)</option>
-            <option value="WARNING">🟡 Warning Buffer (&le; 5 Days)</option>
-            <option value="SAFE">🟢 Safe Inventory (&gt; 5 Days)</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Product Cards Grid -->
-      <div class="product-cards-grid" id="productGridContainer">
-        <!-- Rendered dynamically -->
-      </div>
-    </section>
-
-    <!-- SCREEN 3: SMART REORDER QUEUE (FEATURES 4 & 5) -->
-    <section id="tab-reorder" class="tab-screen">
-      <div class="view-header">
-        <div class="title-wrap">
-          <span class="category-badge">PriorityQueue Min-Heap</span>
-          <h2>Automated Replenishment Queue & Urgency Ranking</h2>
-          <p>Priority ranking powered by the industrial Reorder Point formula: <code>ROP = (Forecast &times; LeadTime) + SafetyBuffer</code>. Items facing immediate stockout appear at the top.</p>
-        </div>
-        <button class="btn-action btn-green" id="btnBatchOrderCritical">🚚 Order All Critical Items</button>
-      </div>
-
-      <!-- FEATURE EXPLAINER / VIVA PRESENTATION GUIDE -->
-      <div class="feature-guide-card accent-amber">
-        <div class="guide-header">
-          <span class="guide-badge">Viva / Interview Walkthrough</span>
-          <h3>Feature 4 & 5: Reorder Point (ROP) & Min-Heap Urgency Ranking</h3>
-        </div>
-        <div class="guide-grid">
-          <div class="guide-item">
-            <span class="guide-step-num">1</span>
-            <div class="guide-item-content">
-              <h4>Reorder Point (ROP) Trigger</h4>
-              <p>Determines replenishment threshold based on lead time delivery delay and dynamic safety stock buffer.</p>
-              <span class="guide-code">ROP = (ADS &times; LeadTime) + SafetyStock</span>
-            </div>
-          </div>
-          <div class="guide-item">
-            <span class="guide-step-num">2</span>
-            <div class="guide-item-content">
-              <h4>Suggested Order Quantity</h4>
-              <p>Calculates optimal economic restock volume to restore safety buffer plus an extra 7 days of forecasted sales.</p>
-              <span class="guide-code">Order Qty = (LeadTime + 7) &times; ADS</span>
-            </div>
-          </div>
-          <div class="guide-item">
-            <span class="guide-step-num">3</span>
-            <div class="guide-item-content">
-              <h4>Min-Heap Priority Queue Ranking</h4>
-              <p>Java <code>PriorityQueue</code> sorts items by fewest days remaining. Tiers: <span class="badge-tag crit">CRITICAL &le; 2d</span>, <span class="badge-tag warn">WARNING &le; 5d</span>, <span class="badge-tag safe">SAFE &gt; 5d</span>.</p>
-              <span class="guide-code">PriorityQueue&lt;Product&gt; minHeap</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="table-card">
-        <table class="soothing-table" id="tableReorders">
-          <thead>
-            <tr>
-              <th>Priority</th>
-              <th>Status</th>
-              <th>SKU</th>
-              <th>Product Name</th>
-              <th>Current Stock</th>
-              <th>Days Left</th>
-              <th>Suggested Order</th>
-              <th>Lead Time</th>
-              <th>Replenishment Rationale</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="tbodyReorders">
-            <!-- Dynamically populated -->
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- SCREEN 4: 2D PROMENADE ARCHITECTURE & MULTI-THREAD SIMULATION -->
-    <section id="tab-painted-mall" class="tab-screen">
-      <div class="view-header">
-        <div class="title-wrap">
-          <span class="category-badge">2D Architecture & Autonomous Engine</span>
-          <h2>The Garden Promenade & Live Simulation</h2>
-          <p>Illustrated architectural view of the 4 retail boutiques with autonomous visitor footfall and purchase simulation.</p>
-        </div>
-        <div class="sim-controls-top">
-          <button class="btn-action btn-blue" id="btnToggleSim">▶ Start Gentle Simulation</button>
-          <button class="btn-action btn-green" id="btnSimNextDay">🌅 Close Day & Advance (<span id="simDayLabel">Day 1</span>)</button>
-          <div class="speed-selector">
-            <span>Interval:</span>
-            <button class="speed-pill active" data-interval="1200">Normal (1.2s)</button>
-            <button class="speed-pill" data-interval="600">Brisk (0.6s)</button>
-          </div>
           <button class="btn-action btn-outline" id="btnStrollVisitor">🕊️ Stroll Visitor</button>
-          <button class="btn-action btn-outline" id="btnRestockCourier">🚚 Courier Van</button>
-        </div>
-      </div>
-
-      <div class="sim-kpi-row">
-        <div class="sim-metric-box">
-          <span class="sim-metric-val" id="simValTicks">0</span>
-          <span class="sim-metric-label">Visitor Footfall Ticks</span>
-        </div>
-        <div class="sim-metric-box green">
-          <span class="sim-metric-val" id="simValPurchases">0</span>
-          <span class="sim-metric-label">Purchases Fulfilled</span>
-        </div>
-        <div class="sim-metric-box red">
-          <span class="sim-metric-val" id="simValStockouts">0</span>
-          <span class="sim-metric-label">Stockout Turnaways</span>
+          <button class="btn-action btn-outline" id="btnRestockCourier">🚚 Dispatch Delivery Van</button>
         </div>
       </div>
 
@@ -684,6 +374,242 @@
           <div class="promenade-tip">💡 Click on any boutique storefront to inspect its shelves and record transactions!</div>
         </div>
       </div>
+    </section>
+
+    <!-- SCREEN 2: OVERVIEW & CHARTS -->
+    <section id="tab-overview" class="tab-screen">
+      <div class="view-header">
+        <div class="title-wrap">
+          <span class="category-badge">Real-Time Aggregation</span>
+          <h2>Executive Inventory Overview</h2>
+          <p>Key inventory indicators, sales momentum, and forecasted depletion timelines across all mall zones.</p>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card-soothing">
+          <div class="kpi-tag-label">TOTAL BOUTIQUE SKUs</div>
+          <div class="kpi-number" id="metricTotalSkus">16</div>
+          <div class="kpi-subtext">Active items in 4 retail sectors</div>
+        </div>
+        <div class="kpi-card-soothing alert-red">
+          <div class="kpi-tag-label">CRITICAL ATTENTION</div>
+          <div class="kpi-number" id="metricCriticalCount">4</div>
+          <div class="kpi-subtext">&le; 2 days of inventory remaining</div>
+        </div>
+        <div class="kpi-card-soothing alert-yellow">
+          <div class="kpi-tag-label">WARNING THRESHOLD</div>
+          <div class="kpi-number" id="metricWarningCount">4</div>
+          <div class="kpi-subtext">&le; 5 days until reorder point</div>
+        </div>
+        <div class="kpi-card-soothing alert-green">
+          <div class="kpi-tag-label">GROSS UNITS SOLD</div>
+          <div class="kpi-number" id="metricUnitsSold">2,902</div>
+          <div class="kpi-subtext" id="metricRevenueText">₹38,410.20 historical revenue</div>
+        </div>
+      </div>
+
+      <!-- Charts Layout -->
+      <div class="charts-row">
+        <!-- Top Sellers Bar Chart -->
+        <div class="chart-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Top Selling Items by Volume</h3>
+              <p class="panel-desc">Highest overall unit consumption across 14 tracked days</p>
+            </div>
+            <span class="panel-chip">Historical Top 5</span>
+          </div>
+          <div class="chart-body" id="topSellersBarsWrapper">
+            <!-- Dynamically populated with clean SVG bar charts -->
+          </div>
+        </div>
+
+        <!-- Stockout Horizon Indicators -->
+        <div class="chart-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Stockout Exhaustion Timelines</h3>
+              <p class="panel-desc">Estimated days before current stock reaches zero</p>
+            </div>
+            <span class="panel-chip">Consumption Velocity</span>
+          </div>
+          <div class="chart-body" id="stockoutHorizonWrapper">
+            <!-- Clean timeline gauges -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 14-Day Sales Matrix Curve -->
+      <div class="chart-panel full-span">
+        <div class="panel-header">
+          <div>
+            <h3>14-Day Mall-Wide Aggregated Footfall & Sales Trend</h3>
+            <p class="panel-desc">Calculated via multi-dimensional array matrix aggregation across all 4 sectors</p>
+          </div>
+          <span class="panel-chip">Zone Matrix Sum</span>
+        </div>
+        <div class="chart-body" id="salesTrendCurveContainer">
+          <!-- Responsive vector line curve -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: BOUTIQUE SHELVES (CATALOG & CRUD) -->
+    <section id="tab-catalog" class="tab-screen">
+      <div class="view-header">
+        <div class="title-wrap">
+          <span class="category-badge">Inventory Catalog & POS</span>
+          <h2>Boutique Shelves & Product Directory</h2>
+          <p>Search, filter, record point-of-sale customer purchases, replenish stock, or add new artisan goods.</p>
+        </div>
+        <div class="header-actions-bar">
+          <button class="btn-action btn-green" id="btnOpenSaleModal">💰 Record Sale</button>
+          <button class="btn-action btn-blue" id="btnOpenRestockModal">📦 Restock</button>
+          <button class="btn-action btn-outline" id="btnUndoTransaction">↩️ Undo Sale</button>
+          <button class="btn-action btn-accent" id="btnOpenAddSkuModal">✨ Add SKU</button>
+        </div>
+      </div>
+
+      <!-- Filters Row -->
+      <div class="filter-strip">
+        <div class="search-box">
+          <span class="search-sym">🔍</span>
+          <input type="text" id="catalogSearch" placeholder="Search by name, SKU ID, or category...">
+        </div>
+        <div class="select-group">
+          <select id="selectZoneFilter" class="soothing-select">
+            <option value="ALL">All Sectors (Entire Promenade)</option>
+            <option value="FOOD">Food Court — Botanical Cafe</option>
+            <option value="ELEC">Electronics — Studio Nordics</option>
+            <option value="FASH">Fashion — Maison Atelier</option>
+            <option value="GROC">Grocery — Rustic Harvest</option>
+          </select>
+          <select id="selectHealthFilter" class="soothing-select">
+            <option value="ALL">All Health Tiers</option>
+            <option value="CRITICAL">🔴 Critical Stock (&le; 2 Days)</option>
+            <option value="WARNING">🟡 Warning Buffer (&le; 5 Days)</option>
+            <option value="SAFE">🟢 Safe Inventory (&gt; 5 Days)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Product Cards Grid -->
+      <div class="product-cards-grid" id="productGridContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- SCREEN 4: SMART REORDER QUEUE -->
+    <section id="tab-reorder" class="tab-screen">
+      <div class="view-header">
+        <div class="title-wrap">
+          <span class="category-badge">PriorityQueue Min-Heap</span>
+          <h2>Automated Replenishment Queue</h2>
+          <p>Priority ranking powered by the industrial Reorder Point formula: <code>ROP = (Forecast &times; LeadTime) + SafetyBuffer</code>. Items facing immediate stockout appear at the top.</p>
+        </div>
+        <button class="btn-action btn-green" id="btnBatchOrderCritical">🚚 Order All Critical Items</button>
+      </div>
+
+      <div class="table-card">
+        <table class="soothing-table" id="tableReorders">
+          <thead>
+            <tr>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>SKU</th>
+              <th>Product Name</th>
+              <th>Current Stock</th>
+              <th>Days Left</th>
+              <th>Suggested Order</th>
+              <th>Lead Time</th>
+              <th>Replenishment Rationale</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyReorders">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SCREEN 5: DEMAND ANALYTICS & 2D MATRIX -->
+    <section id="tab-analytics" class="tab-screen">
+      <div class="view-header">
+        <div class="title-wrap">
+          <span class="category-badge">Predictive Operations Research</span>
+          <h2>Demand Forecasting & Sector Matrix</h2>
+          <p>Fine-tune footfall surge multipliers and analyze performance across 4 mathematical models.</p>
+        </div>
+      </div>
+
+      <!-- Multiplier Card -->
+      <div class="multiplier-card">
+        <div class="multiplier-info-side">
+          <span class="category-badge">Dynamic Scenario Simulator</span>
+          <h3>Weekend & Festival Surge Multiplier</h3>
+          <p>Adjust the slider to simulate holiday rushes (1.0x to 2.5x). Demand velocities and stockout days recalculate across the entire platform in real time.</p>
+        </div>
+        <div class="multiplier-slider-side">
+          <div class="slider-display" id="multiplierSliderText">1.00x Base Footfall</div>
+          <input type="range" id="sliderDemandMultiplier" min="100" max="250" value="100" step="5">
+          <div class="slider-ticks">
+            <span>1.0x Weekday</span>
+            <span>1.5x Weekend</span>
+            <span>2.0x Holiday</span>
+            <span>2.5x Festival</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Sub-Tabs -->
+      <div class="analytics-subnav">
+        <button class="subnav-btn active" data-sub="tab-top-sellers">🏆 Top Sellers (Volume)</button>
+        <button class="subnav-btn" data-sub="tab-slow-movers">🐢 Slow Movers (Velocity)</button>
+        <button class="subnav-btn" data-sub="tab-dead-stock">💀 Dead Stock (Tied Capital)</button>
+        <button class="subnav-btn" data-sub="tab-matrix">🧮 2D Sector Matrix (14-Day)</button>
+      </div>
+
+      <div class="table-card" id="analyticsTableArea">
+        <!-- Dynamically rendered -->
+      </div>
+    </section>
+
+    <!-- SCREEN 6: GENTLE SIMULATION -->
+    <section id="tab-simulation" class="tab-screen">
+      <div class="view-header">
+        <div class="title-wrap">
+          <span class="category-badge">Autonomous Traffic Engine</span>
+          <h2>Gentle Footfall & Purchasing Simulation</h2>
+          <p>A background worker simulates visitors calmly strolling through the promenade and purchasing artisan goods every second.</p>
+        </div>
+        <div class="sim-controls-top">
+          <button class="btn-action btn-blue" id="btnToggleSim">▶ Start Gentle Simulation</button>
+          <button class="btn-action btn-green" id="btnSimNextDay">🌅 Close Day & Advance (<span id="simDayLabel">Day 1</span>)</button>
+          <div class="speed-selector">
+            <span>Interval:</span>
+            <button class="speed-pill active" data-interval="1200">Normal (1.2s)</button>
+            <button class="speed-pill" data-interval="600">Brisk (0.6s)</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sim-kpi-row">
+        <div class="sim-metric-box">
+          <span class="sim-metric-val" id="simValTicks">0</span>
+          <span class="sim-metric-label">Visitor Footfall Ticks</span>
+        </div>
+        <div class="sim-metric-box green">
+          <span class="sim-metric-val" id="simValPurchases">0</span>
+          <span class="sim-metric-label">Purchases Fulfilled</span>
+        </div>
+        <div class="sim-metric-box red">
+          <span class="sim-metric-val" id="simValStockouts">0</span>
+          <span class="sim-metric-label">Stockout Turnaways</span>
+        </div>
+      </div>
 
       <div class="sim-split-grid">
         <!-- Live depletion meters -->
@@ -715,6 +641,7 @@
         </div>
       </div>
     </section>
+
   </main>
 
   <!-- SOOTHING BOTTOM TICKER -->

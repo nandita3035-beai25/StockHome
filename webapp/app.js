@@ -59,7 +59,7 @@
       demandMultiplier: 1.0,
       soundEnabled: true,
       twilightMode: false,
-      activeTab: 'tab-overview',
+      activeTab: 'tab-painted-mall',
       activeReportSub: 'tab-top-sellers',
       simulation: {
         active: false,
@@ -91,7 +91,7 @@
             demandMultiplier: typeof parsed.demandMultiplier === 'number' ? parsed.demandMultiplier : 1.0,
             soundEnabled: parsed.soundEnabled !== undefined ? Boolean(parsed.soundEnabled) : true,
             twilightMode: parsed.twilightMode !== undefined ? Boolean(parsed.twilightMode) : false,
-            activeTab: parsed.activeTab || 'tab-overview',
+            activeTab: parsed.activeTab || 'tab-painted-mall',
             activeReportSub: parsed.activeReportSub || 'tab-top-sellers'
           };
         }
@@ -1224,31 +1224,22 @@
   }
 
   // Promenade Action Buttons
-  const btnStroll = document.getElementById('btnStrollVisitor');
-  if (btnStroll) {
-    btnStroll.onclick = () => {
-      playSound('pop');
-      if (visitorsLayer) {
-        const v = new StrollingVisitor(visitors.length);
-        visitors.push(v);
-        visitorsLayer.appendChild(v.element);
-        showToast('A new visitor has entered the promenade.');
-      }
-    };
-  }
+  document.getElementById('btnStrollVisitor').onclick = () => {
+    playSound('pop');
+    if (visitorsLayer) {
+      const v = new StrollingVisitor(visitors.length);
+      visitors.push(v);
+      visitorsLayer.appendChild(v.element);
+      showToast('A new visitor has entered the promenade.');
+    }
+  };
 
-  const btnCourier = document.getElementById('btnRestockCourier');
-  if (btnCourier) {
-    btnCourier.onclick = () => {
-      dispatchCourierVan('FOOD');
-    };
-  }
+  document.getElementById('btnRestockCourier').onclick = () => {
+    dispatchCourierVan('FOOD');
+  };
 
   // Simulation Toggle
-  const btnSim = document.getElementById('btnToggleSim');
-  if (btnSim) {
-    btnSim.onclick = toggleSimulation;
-  }
+  document.getElementById('btnToggleSim').onclick = toggleSimulation;
 
   document.querySelectorAll('.speed-pill').forEach(pill => {
     pill.onclick = () => {
@@ -1411,16 +1402,6 @@
       themeBtn.title = 'Switch to Daylight';
     }
   }
-  // Synchronize active navigation tab and viewport screen
-  const initialNav = document.querySelector(`.nav-item[data-tab="${state.activeTab}"]`);
-  if (initialNav) {
-    document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-screen').forEach(s => s.classList.remove('active'));
-    initialNav.classList.add('active');
-    const targetScreen = document.getElementById(state.activeTab);
-    if (targetScreen) targetScreen.classList.add('active');
-  }
-
   initPromenadeArtwork();
   updateAllViews();
 
