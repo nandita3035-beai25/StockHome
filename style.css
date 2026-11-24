@@ -1653,6 +1653,12 @@ body.theme-twilight .tag-purple {
     align-items: flex-start;
     gap: 12px;
   }
+
+  .nav-item {
+    font-size: 12.5px;
+    padding: 9px 5px;
+    gap: 4px;
+  }
 }
 
 /* Medium Tablets & Large Phones (<= 840px) */
@@ -1714,23 +1720,19 @@ body.theme-twilight .tag-purple {
   }
 
   .nav-inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 6px;
     padding: 2px 0;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    -webkit-overflow-scrolling: touch;
-    flex-wrap: wrap;
-  }
-  .nav-inner::-webkit-scrollbar {
-    display: none;
-    width: 0;
-    height: 0;
+    width: 100%;
   }
 
   .nav-item {
-    padding: 6px 11px;
-    font-size: 12.5px;
+    padding: 8px 6px;
+    font-size: 12px;
     border-radius: 8px;
+    justify-content: center;
+    width: 100%;
   }
 
   .app-viewport {
