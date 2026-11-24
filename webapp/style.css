@@ -286,40 +286,37 @@ body.theme-twilight .pill-badge.pill-day {
 .app-nav {
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border-light);
-  padding: 6px 24px;
+  padding: 8px 36px;
 }
 
 .nav-inner {
   display: flex;
   align-items: center;
-  gap: 6px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.nav-inner::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
+  justify-content: space-between;
+  gap: 8px;
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .nav-item {
+  flex: 1 1 0;
+  min-width: 0;
   font-family: 'Outfit', sans-serif;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 600;
   color: var(--text-secondary);
   background: transparent;
   border: 1px solid transparent;
-  padding: 7px 13px;
-  border-radius: 9px;
+  padding: 10px 8px;
+  border-radius: 10px;
   cursor: pointer;
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
-  flex-shrink: 0;
 }
 
 .nav-item:hover {
@@ -332,6 +329,7 @@ body.theme-twilight .pill-badge.pill-day {
   background: var(--slate-blue);
   color: #FFFFFF;
   border-color: var(--slate-blue);
+  box-shadow: 0 1px 3px rgba(69, 105, 144, 0.25);
 }
 
 .tab-chip {
@@ -1655,6 +1653,12 @@ body.theme-twilight .tag-purple {
     align-items: flex-start;
     gap: 12px;
   }
+
+  .nav-item {
+    font-size: 12.5px;
+    padding: 9px 5px;
+    gap: 4px;
+  }
 }
 
 /* Medium Tablets & Large Phones (<= 840px) */
@@ -1716,23 +1720,19 @@ body.theme-twilight .tag-purple {
   }
 
   .nav-inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 6px;
     padding: 2px 0;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    -webkit-overflow-scrolling: touch;
-    flex-wrap: wrap;
-  }
-  .nav-inner::-webkit-scrollbar {
-    display: none;
-    width: 0;
-    height: 0;
+    width: 100%;
   }
 
   .nav-item {
-    padding: 6px 11px;
-    font-size: 12.5px;
+    padding: 8px 6px;
+    font-size: 12px;
     border-radius: 8px;
+    justify-content: center;
+    width: 100%;
   }
 
   .app-viewport {
@@ -1944,6 +1944,15 @@ body.theme-twilight .tag-purple {
     width: 30px;
     height: 30px;
     font-size: 12px;
+  }
+
+  .nav-inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nav-item {
+    font-size: 11.5px;
+    padding: 7px 4px;
   }
 
   .kpi-grid {
