@@ -264,6 +264,13 @@ body.theme-twilight .pill-badge.pill-day {
   border-color: var(--text-secondary);
   transform: translateY(-1px);
 }
+
+.control-btn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border-medium);
   background: var(--bg-surface);
   color: var(--text-primary);
@@ -277,6 +284,151 @@ body.theme-twilight .pill-badge.pill-day {
 .control-btn:hover {
   background: var(--bg-surface-subtle);
   border-color: var(--text-secondary);
+}
+
+/* =========================================================================
+   FEATURE EXPLAINER & VIVA PRESENTATION GUIDE CARDS
+   ========================================================================= */
+
+.feature-guide-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 22px;
+  box-shadow: var(--shadow-subtle);
+  border-left: 4px solid var(--slate-blue);
+}
+
+.feature-guide-card.accent-green {
+  border-left-color: var(--sage-safe);
+}
+
+.feature-guide-card.accent-amber {
+  border-left-color: var(--amber-warn);
+}
+
+.guide-header {
+  margin-bottom: 12px;
+}
+
+.guide-badge {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--slate-blue);
+  background: var(--slate-blue-light);
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.accent-green .guide-badge {
+  color: var(--sage-safe);
+  background: var(--sage-safe-bg);
+}
+
+.accent-amber .guide-badge {
+  color: var(--amber-warn);
+  background: var(--amber-warn-bg);
+}
+
+.guide-header h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.guide-grid.two-col {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.guide-item {
+  display: flex;
+  gap: 12px;
+  background: var(--bg-surface-subtle);
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+}
+
+.guide-step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--slate-blue);
+  color: #FFFFFF;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.accent-green .guide-step-num {
+  background: var(--sage-safe);
+}
+
+.accent-amber .guide-step-num {
+  background: var(--amber-warn);
+}
+
+.guide-item-content h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.guide-item-content p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+
+.guide-code {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 2px 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: 4px;
+  color: var(--slate-blue);
+  font-weight: 600;
+}
+
+.badge-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+.badge-tag.crit { background: var(--terracotta-crit-bg); color: var(--terracotta-crit); }
+.badge-tag.warn { background: var(--amber-warn-bg); color: var(--amber-warn); }
+.badge-tag.safe { background: var(--sage-safe-bg); color: var(--sage-safe); }
+
+@media (max-width: 900px) {
+  .guide-grid, .guide-grid.two-col {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
 }
 
 /* =========================================================================
