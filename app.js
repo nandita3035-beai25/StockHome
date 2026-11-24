@@ -1411,6 +1411,16 @@
       themeBtn.title = 'Switch to Daylight';
     }
   }
+  // Synchronize active navigation tab and viewport screen
+  const initialNav = document.querySelector(`.nav-item[data-tab="${state.activeTab}"]`);
+  if (initialNav) {
+    document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-screen').forEach(s => s.classList.remove('active'));
+    initialNav.classList.add('active');
+    const targetScreen = document.getElementById(state.activeTab);
+    if (targetScreen) targetScreen.classList.add('active');
+  }
+
   initPromenadeArtwork();
   updateAllViews();
 
