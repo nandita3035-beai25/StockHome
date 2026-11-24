@@ -1157,17 +1157,32 @@
   // 8. EVENT WIRE-UP
   // =========================================================================
 
+  // Tab switching helper
+  function switchToTab(tabId) {
+    if (!tabId) return;
+    playSound('pop');
+    document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.drawer-nav-pill').forEach(p => p.classList.remove('active'));
+
+    const navBtn = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+    if (navBtn) navBtn.classList.add('active');
+
+    const drawerPill = document.querySelector(`.drawer-nav-pill[data-tab="${tabId}"]`);
+    if (drawerPill) drawerPill.classList.add('active');
+
+    const target = document.getElementById(tabId);
+    if (target) target.classList.add('active');
+
+    state.activeTab = tabId;
+    saveStateToStorage();
+    updateAllViews();
+  }
+
   // Tab switching
   document.querySelectorAll('.nav-item').forEach(tab => {
     tab.onclick = () => {
-      playSound('pop');
-      document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-screen').forEach(s => s.classList.remove('active'));
-      tab.classList.add('active');
-      const target = document.getElementById(tab.dataset.tab);
-      if (target) target.classList.add('active');
-      state.activeTab = tab.dataset.tab;
-      updateAllViews();
+      switchToTab(tab.dataset.tab);
     };
   });
 
@@ -1273,7 +1288,71 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       document.querySelectorAll('.modal-scrim.open').forEach(m => m.classList.remove('open'));
+      closeFeaturesDrawer();
     }
+  });
+
+  // =========================================================================
+  // HAMBURGER CORE FEATURES DRAWER
+  // =========================================================================
+
+  const drawer = document.getElementById('featuresDrawer');
+  const drawerOverlay = document.getElementById('drawerOverlay');
+
+  function openFeaturesDrawer() {
+    playSound('pop');
+    if (drawer) {
+      drawer.classList.add('open');
+      drawer.setAttribute('aria-hidden', 'false');
+    }
+    if (drawerOverlay) {
+      drawerOverlay.classList.add('open');
+      drawerOverlay.setAttribute('aria-hidden', 'false');
+    }
+  }
+
+  function closeFeaturesDrawer() {
+    if (drawer) {
+      drawer.classList.remove('open');
+      drawer.setAttribute('aria-hidden', 'true');
+    }
+    if (drawerOverlay) {
+      drawerOverlay.classList.remove('open');
+      drawerOverlay.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  const btnHamburger = document.getElementById('btnHamburger');
+  if (btnHamburger) btnHamburger.onclick = openFeaturesDrawer;
+
+  const btnHeaderHamburger = document.getElementById('btnHeaderHamburger');
+  if (btnHeaderHamburger) btnHeaderHamburger.onclick = openFeaturesDrawer;
+
+  const btnCloseDrawer = document.getElementById('btnCloseDrawer');
+  if (btnCloseDrawer) btnCloseDrawer.onclick = closeFeaturesDrawer;
+
+  if (drawerOverlay) drawerOverlay.onclick = closeFeaturesDrawer;
+
+  // Jump to feature tab from inside the drawer
+  document.querySelectorAll('.drawer-jump-btn').forEach(btn => {
+    btn.onclick = () => {
+      const targetTab = btn.dataset.jump;
+      if (targetTab) {
+        switchToTab(targetTab);
+        closeFeaturesDrawer();
+      }
+    };
+  });
+
+  // Drawer quick nav chips
+  document.querySelectorAll('.drawer-nav-pill').forEach(pill => {
+    pill.onclick = () => {
+      const targetTab = pill.dataset.tab;
+      if (targetTab) {
+        switchToTab(targetTab);
+        closeFeaturesDrawer();
+      }
+    };
   });
 
   // Record Sale Modal
